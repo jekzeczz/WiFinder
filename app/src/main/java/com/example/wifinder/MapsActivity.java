@@ -20,9 +20,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
@@ -39,45 +39,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        UiSettings us = mMap.getUiSettings();
+
+        //Permission拒否
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
+
+            return;
+        }
+        //Permission許可
+        else {
+            locationStart();
+
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 50, this);
+        }
+
+        us.setZoomControlsEnabled(true);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_PERMISSION) {
             // 使用が許可された
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d("################", "checkSelfPermission true");
 
                 locationStart();
-            } else {
+            }
+            else {
                 // それでも拒否された時の対応
                 Toast toast = Toast.makeText(this,
                         "これ以上なにもできません", Toast.LENGTH_SHORT);
                 toast.show();
             }
         }
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "nop", Toast.LENGTH_SHORT).show();
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
-            return;
-        } else {
-            locationStart();
-
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 50, this);
-
-        }
-        Toast.makeText(this, "yes!!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -91,10 +93,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Latitude:35.775315
         // Longitude:139.79716333333332
-        LatLng sydney = new LatLng(lat, lng);
-        mMap.addMarker(new MarkerOptions().position(sydney)); //.title("Marker in Sydney")
+        //LatLng myLocation = new LatLng(lat, lng);
+        //mMap.addMarker(new MarkerOptions().position(myLocation));
+
+        //現在位置表示
+        mMap.setMyLocationEnabled(true);
+
         zoomMap(lat, lng);
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     @Override
@@ -120,24 +125,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.e("#########", "location manager Enabled");
         } else {
             // GPSを設定するように促す
-            Intent settingsIntent =
-                    new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(settingsIntent);
             Log.e("############", "not gpsEnable, startActivity");
         }
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
             Log.d("############", "checkSelfPermission false");
             return;
         }
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                REQUEST_PERMISSION, 50, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, REQUEST_PERMISSION, 50, this);
     }
 
     private void zoomMap(double latitude, double longitude){
@@ -157,8 +156,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int height = getResources().getDisplayMetrics().heightPixels;
 
         // static CameraUpdate.newLatLngBounds(LatLngBounds bounds, int width, int height, int padding)
-        mMap.moveCamera(CameraUpdateFactory.
-                newLatLngBounds(bounds, width, height, 0));
-
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, 0));
     }
 }
