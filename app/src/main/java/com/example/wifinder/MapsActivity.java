@@ -69,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (requestCode == REQUEST_PERMISSION) {
             // 使用が許可された
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("################", "checkSelfPermission true");
+                Log.d("#", "checkSelfPermission true");
 
                 locationStart();
             }
@@ -87,9 +87,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // 緯度
         lat = location.getLatitude();
         lng = location.getLongitude();
-        Log.e("#########", "緯度 Latitude:" + location.getLatitude());
+        Log.e("#", "緯度 Latitude:" + location.getLatitude());
         // 経度
-        Log.e("#############", "経度 Longitude:" + location.getLongitude());
+        Log.e("#", "経度 Longitude:" + location.getLongitude());
 
         // Latitude:35.775315
         // Longitude:139.79716333333332
@@ -99,6 +99,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //現在位置表示
         mMap.setMyLocationEnabled(true);
 
+        //ズーム状態で表示
         zoomMap(lat, lng);
     }
 
@@ -122,17 +123,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Log.e("#########", "location manager Enabled");
+            Log.e("#", "location manager Enabled");
         } else {
             // GPSを設定するように促す
             Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(settingsIntent);
-            Log.e("############", "not gpsEnable, startActivity");
+            Log.e("#", "not gpsEnable, startActivity");
         }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
-            Log.d("############", "checkSelfPermission false");
+            Log.d("#", "checkSelfPermission false");
             return;
         }
 
