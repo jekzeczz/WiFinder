@@ -8,8 +8,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.wifinder.ui.login.LoginActivity;
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
