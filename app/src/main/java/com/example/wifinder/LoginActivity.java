@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText editTextUsername, editTextPassword;
+    EditText editTextEmail, editTextPassword;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         init();
     }
     void init(){
-        editTextUsername = findViewById(R.id.username);
+        editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
         //if user presses on login calling the method login
         findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
@@ -57,12 +57,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void userLogin() {
         //値の取得してくる
-        final String username = editTextUsername.getText().toString();
+        final String email = editTextEmail.getText().toString();
         final String password = editTextPassword.getText().toString();
         //何も入力されていない場合
-        if (TextUtils.isEmpty(username)) {
-            editTextUsername.setError("Please enter username");
-            editTextUsername.requestFocus();
+        if (TextUtils.isEmpty(email)) {
+            editTextEmail.setError("Please enter Email");
+            editTextEmail.requestFocus();
             return;
         }
         if (TextUtils.isEmpty(password)) {
@@ -71,15 +71,15 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
         //すべて入力OK
-        UserLogin ul = new UserLogin(username,password);
+        UserLogin ul = new UserLogin(email,password);
         ul.execute();
     }
 
     class UserLogin extends AsyncTask<Void, Void, String> {
         ProgressBar progressBar;
-        String username, password;
-        UserLogin(String username,String password) {
-            this.username = username;
+        String email, password;
+        UserLogin(String email,String password) {
+            this.email = email;
             this.password = password;
         }
 
@@ -112,16 +112,20 @@ public class LoginActivity extends AppCompatActivity {
                             userJson.getString("email")
                     );
 
+                    Log.d("##", "id : " + user.getId());
+                    Log.d("##", "username : " + user.getUsername());
+                    Log.d("##", "email : " + user.getEmail());
+
                     //storing the user in shared preferences
                     PrefManager.getInstance(getApplicationContext()).setUserLogin(user);
-
+                    Log.d("##", "###");
                     //マップ画面に遷移
                     finish();
                     Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
                     startActivity(intent);
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Invalid username or password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Invalid email or password", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -135,10 +139,10 @@ public class LoginActivity extends AppCompatActivity {
 
             //creating request parameters
             HashMap<String, String> params = new HashMap<>();
-            params.put("username", username);
+            params.put("email", email);
             params.put("password", password);
 
-            Log.d("#", "JSON Object1 : " + username);
+            Log.d("#", "JSON Object1 : " + email);
             Log.d("#", "JSON Object2 : " + password);
             //returing the response
             return requestHandler.sendPostRequest(URLS.URL_LOGIN, params);
