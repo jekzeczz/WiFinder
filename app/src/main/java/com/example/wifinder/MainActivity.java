@@ -25,6 +25,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //SignUp画面に遷移する
+        Button signUpButton = findViewById(R.id.signUp);
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplication(), SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
+
         //LoginせずにMap画面に遷移する
         TextView noLoginText = findViewById(R.id.noLogin);
 
