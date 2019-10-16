@@ -6,9 +6,19 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.example.wifinder.data.URLS;
+import com.example.wifinder.data.model.User;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 public class SignUpActivity extends AppCompatActivity {
     EditText editTextUsername, editTextEmail, editTextPassword;
@@ -69,8 +79,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         //すべての検証をパスした場合
         //async taskを実行
-        //SignUpUser suu = new SignUpUser(username,email,password);
-        //suu.execute();
+        SignUpUser suu = new SignUpUser(username,email,password);
+        suu.execute();
     }
     private class SignUpUser extends AsyncTask<Void, Void, String> {
         private ProgressBar progressBar;
@@ -90,11 +100,41 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Log.i("signup","signup : " + s);
+            progressBar.setVisibility(View.GONE);
+            try {
+                JSONObject obj = new JSONObject(s);
+                if (!obj.getBoolean("error")){
+                    Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    JSONObject userJson = obj.getJSONObject("user");
+                    User user = new User(
+                            userJson.getInt("id"),
+                            userJson.getString("username"),
+                            userJson.getString("email")
+                    );
+                    PrefManager.getInstance(getApplicationContext()).setUserLogin(user);
+                    finish();
+                    startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "エラー発生", Toast.LENGTH_SHORT).show();
+                }
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         protected String doInBackground(Void... voids) {
-            return null;
+            RequestHandler requestHandler = new RequestHandler();
+
+            HashMap<String, String> params = new HashMap<>();
+            params.put("username", username);
+            params.put("email", email);
+            params.put("password", password);
+
+            return requestHandler.sendPostRequest(URLS.URL_SIGNUP, params);
         }
     }
 }
