@@ -1,10 +1,7 @@
 package com.example.wifinder.data.model;
 
 public class Spot {
-    private String username, email;
     private int id;
-    
-    public Spot(int id, String username, String email) {
     private String spotname;
     private double longitude, latitude; // 緯度　経度
 
