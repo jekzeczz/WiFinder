@@ -9,13 +9,13 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created 2018/09/24.
  * 参考：https://akira-watson.com/android/sqlite.html
  */
-public class TestOpenHelper extends SQLiteOpenHelper {
+public class TestOpenDB extends SQLiteOpenHelper {
 
     // データーベースのバージョン
     private static final int DATABASE_VERSION = 3;
 
     // データーベース情報を変数に格納
-    private static final String DATABASE_NAME = "sotusei";
+    private static final String DATABASE_NAME = "Test.db";
     private static final String TABLE_NAME = "spot2";
     private static final String ID = "id";
     private static final String COLUMN_NAME_TITLE = "name";
@@ -26,15 +26,17 @@ public class TestOpenHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TABLE_NAME + " (" +
-                    ID + " INTEGER PRIMARY KEY," +
-                    COLUMN_NAME_TITLE + " TEXT," +
-                    COLUMN_NAME_A + " INTEGER)";
+                    ID + "INTEGER PRIMARY KEY," +
+                    COLUMN_NAME_TITLE + "TEXT," +
+                    COLUMN_NAME_A + " REAL," +
+                    COLUMN_NAME_B + " REAL," +
+                    COLUMN_NAME_C + " INTGER)";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
 
 
-    TestOpenHelper(Context context) {
+    TestOpenDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
     }
