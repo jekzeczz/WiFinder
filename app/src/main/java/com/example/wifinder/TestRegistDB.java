@@ -1,7 +1,6 @@
 package com.example.wifinder;
 
 import android.content.ContentValues;
-        import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.database.Cursor;
         import android.database.sqlite.SQLiteDatabase;
@@ -9,10 +8,12 @@ import android.content.ContentValues;
         import android.widget.EditText;
         import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class TestRegistDB extends AppCompatActivity {
 
     private TextView textView;
-    private TestOpenHelper helper;
+    //private TestOpenHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,16 +21,17 @@ public class TestRegistDB extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // DB作成
-        helper = new TestOpenHelper(getApplicationContext());
+        //helper = new TestOpenHelper(getApplicationContext());
 
         // 変数textViewに表示するテキストビューのidを格納
-        textView = findViewById(R.id.text_view);
+        //textView = findViewById(R.id.text_view);
     }
 
     /**
      * DBからデータを全件取得し画面に表示する.
      * @param view
      */
+    /*
     public void readData(View view){
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.query(
@@ -58,11 +60,12 @@ public class TestRegistDB extends AppCompatActivity {
 
         textView.setText(sbuilder.toString());
     }
-
+*/
     /**
      * データを保存する.
      * @param view
      */
+    /*
     public void saveData(View view) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -76,4 +79,5 @@ public class TestRegistDB extends AppCompatActivity {
 
         db.insert("testdb", null, values);
     }
+     */
 }

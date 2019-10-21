@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_map"
+        android:icon="@drawable/ic_map_marker_alt_solid"
+        android:title="MAP" />
+
+    <item
+        android:id="@+id/navigation_favorite"
+        android:icon="@drawable/ic_heart_solid"
+        android:title="FAVORITE" />
+
+    <item
+        android:id="@+id/navigation_user"
+        android:icon="@drawable/ic_user_solid"
+        android:title="USER" />
+
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/ic_cog_solid"
+        android:title="SETTINGS" />
+
+</menu>
