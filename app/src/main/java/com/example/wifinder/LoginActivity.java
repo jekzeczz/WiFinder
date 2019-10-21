@@ -42,17 +42,17 @@ public class LoginActivity extends AppCompatActivity {
                 userLogin();
             }
         });
+
         //if user presses on not registered
-        /*
-        findViewById(R.id.textViewRegister).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //open register screen
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                //open signup screen
+                startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
                 finish();
             }
         });
-         */
+
     }
 
     private void userLogin() {
