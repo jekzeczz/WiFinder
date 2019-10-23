@@ -32,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
 
         init();
     }
+
+    //テキストの初期化
     void init(){
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
@@ -55,11 +57,12 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    //ログイン処理
     private void userLogin() {
-        //値の取得してくる
+        //値の取得
         final String email = editTextEmail.getText().toString();
         final String password = editTextPassword.getText().toString();
-        //何も入力されていない場合
+        //何も入力されていない場合（Eメールとパスワード）
         if (TextUtils.isEmpty(email)) {
             editTextEmail.setError("Please enter Email");
             editTextEmail.requestFocus();
@@ -75,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         ul.execute();
     }
 
-    class UserLogin extends AsyncTask<Void, Void, String> {
+    class UserLogin extends AsyncTask<Void, Void, String> { //非同期処理メソッド
         ProgressBar progressBar;
         String email, password;
         UserLogin(String email,String password) {
@@ -84,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
+        // doInBackgroundメソッドの実行前にメインスレッドで実行されます
         protected void onPreExecute() {
             super.onPreExecute();
             progressBar = findViewById(R.id.loading);
@@ -91,6 +95,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
+        // doInBackgroundメソッドの実行後にメインスレッドで実行されます
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             progressBar.setVisibility(View.GONE);
