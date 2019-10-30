@@ -80,4 +80,5 @@ public class TestRegistDB extends AppCompatActivity {
         db.insert("testdb", null, values);
     }
 */
+
 }

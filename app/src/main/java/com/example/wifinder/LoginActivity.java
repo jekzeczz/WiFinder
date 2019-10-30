@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 import com.example.wifinder.data.URLS;
+import com.example.wifinder.data.model.Spot;
 import com.example.wifinder.data.model.User;
 
 import java.util.HashMap;
@@ -52,6 +53,13 @@ public class LoginActivity extends AppCompatActivity {
                 //open signup screen
                 startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
                 finish();
+            }
+        });
+
+        findViewById(R.id.spot).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                spot();
             }
         });
 
@@ -151,6 +159,74 @@ public class LoginActivity extends AppCompatActivity {
             Log.d("#", "JSON Object2 : " + password);
             //returing the response
             return requestHandler.sendPostRequest(URLS.URL_LOGIN, params);
+        }
+    }
+
+
+
+
+    private void spot() {
+        GetSpot gs = new GetSpot();
+        gs.execute();
+    }
+
+    private class GetSpot extends AsyncTask<Void, Void, String> {
+        @Override
+        // doInBackgroundメソッドの実行前にメインスレッドで実行されます
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //progressBar = findViewById(R.id.loading);
+            //progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        // doInBackgroundメソッドの実行後にメインスレッドで実行されます
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            try {
+                //レスポンスをjsonオブジェクトに変換
+                JSONObject obj = new JSONObject(s);
+                Log.d("#", "JSON Object : " + obj);
+                //レスポンスにエラーが無い場合
+                if (!obj.getBoolean("error")) {
+
+                    //レスポンスからuserをゲット
+                    JSONObject userJson = obj.getJSONObject("spot");
+
+                    //userオブジェクトを生成
+                    Spot spot = new Spot(
+                            userJson.getInt("id"),
+                            userJson.getString("spotname"),
+                            userJson.getDouble("latitude"),
+                            userJson.getDouble("longitude")
+                    );
+
+                    Log.d("##", "id : " + spot.getId());
+                    Log.d("##", "username : " + spot.getSpotname());
+
+                    //storing the user in shared preferences
+                    //PrefManager.getInstance(getApplicationContext()).setUserLogin(user);
+                    Log.d("##", "###");
+                    //マップ画面に遷移
+                    //finish();
+                    //Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                    //startActivity(intent);
+
+                } else {
+                    //Toast.makeText(getApplicationContext(), "Invalid email or password", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            RequestHandler requestHandler = new RequestHandler();
+
+            HashMap<String, String> params = new HashMap<>();
+
+            return requestHandler.sendPostRequest2(URLS.SPOT_ROOT);
         }
     }
 }

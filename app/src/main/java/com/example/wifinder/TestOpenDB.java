@@ -2,8 +2,23 @@ package com.example.wifinder;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.example.wifinder.data.URLS;
+import com.example.wifinder.data.model.Spot;
+import com.example.wifinder.data.model.User;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 /**
  * Created 2018/09/24.
@@ -21,7 +36,7 @@ public class TestOpenDB extends SQLiteOpenHelper {
     private static final String COLUMN_NAME_TITLE = "name";
     private static final String COLUMN_NAME_A = "longitude";
     private static final String COLUMN_NAME_B = "latitude";
-    private static final String COLUMN_NAME_C = "type";
+    //private static final String COLUMN_NAME_C = "type";
 
 
     private static final String SQL_CREATE_ENTRIES =
@@ -29,8 +44,9 @@ public class TestOpenDB extends SQLiteOpenHelper {
                     ID + "INTEGER PRIMARY KEY," +
                     COLUMN_NAME_TITLE + "TEXT," +
                     COLUMN_NAME_A + " REAL," +
-                    COLUMN_NAME_B + " REAL," +
-                    COLUMN_NAME_C + " INTGER)";
+                    COLUMN_NAME_B + " REAL)";
+       //             COLUMN_NAME_B + " REAL," +
+       //             COLUMN_NAME_C + " INTGER)";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
@@ -46,12 +62,7 @@ public class TestOpenDB extends SQLiteOpenHelper {
         db.execSQL(
                 SQL_CREATE_ENTRIES
         );
-
-        saveData(db, "music1", 10);
-        saveData(db, "music2", 0);
-        saveData(db, "music3", 0);
-        saveData(db, "music4", 0);
-        saveData(db, "music5", 0);
+        //saveData(db,"1", "東京都大田区羽田空港3-3-2 羽田", "35.551001", "139.788613");
 
     }
 
@@ -68,11 +79,80 @@ public class TestOpenDB extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    public void saveData(SQLiteDatabase db, String title, int score){
+    public void saveData(SQLiteDatabase db, int id, String name, double lo, double la){
         ContentValues values = new ContentValues();
-        values.put("title", title);
-        values.put("score", score);
+        values.put("id", id);
+        values.put("name", name);
+        values.put("longitude", lo);
+        values.put("latitude", la);
+
 
         db.insert("testdb", null, values);
+    }
+
+
+
+
+
+
+    private class GetSpot extends AsyncTask<Void, Void, String> {
+
+        @Override
+        // doInBackgroundメソッドの実行前にメインスレッドで実行されます
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //progressBar = findViewById(R.id.loading);
+            //progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        // doInBackgroundメソッドの実行後にメインスレッドで実行されます
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            try {
+                //レスポンスをjsonオブジェクトに変換
+                JSONObject obj = new JSONObject(s);
+                Log.d("#", "JSON Object : " + obj);
+                //レスポンスにエラーが無い場合
+                if (!obj.getBoolean("error")) {
+
+                    //レスポンスからuserをゲット
+                    JSONObject userJson = obj.getJSONObject("spot");
+
+                    //userオブジェクトを生成
+                    Spot spot = new Spot(
+                            userJson.getInt("id"),
+                            userJson.getString("spotname"),
+                            userJson.getDouble("latitude"),
+                            userJson.getDouble("longitude")
+                    );
+
+                    Log.d("##", "id : " + spot.getId());
+                    Log.d("##", "username : " + spot.getSpotname());
+
+                    //storing the user in shared preferences
+                    //PrefManager.getInstance(getApplicationContext()).setUserLogin(user);
+                    Log.d("##", "###");
+                    //マップ画面に遷移
+                    //finish();
+                    //Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                    //startActivity(intent);
+
+                } else {
+                    //Toast.makeText(getApplicationContext(), "Invalid email or password", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            RequestHandler requestHandler = new RequestHandler();
+
+            HashMap<String, String> params = new HashMap<>();
+
+            return requestHandler.sendPostRequest(URLS.SPOT_ROOT, params);
+        }
     }
 }
