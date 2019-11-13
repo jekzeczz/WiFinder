@@ -1,6 +1,8 @@
 package com.example.wifinder;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -18,6 +21,7 @@ import org.json.JSONException;
 
 import com.example.wifinder.data.URLS;
 import com.example.wifinder.data.model.Spot;
+import com.example.wifinder.data.model.TestOpenHelper;
 import com.example.wifinder.data.model.User;
 
 import java.util.HashMap;
@@ -25,6 +29,8 @@ import java.util.HashMap;
 public class LoginActivity extends AppCompatActivity {
 
     EditText editTextEmail, editTextPassword;
+    private TextView textView;
+    private TestOpenHelper helper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,6 +38,16 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         init();
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // DB作成
+        helper = new TestOpenHelper(getApplicationContext());
+
+        // 変数textViewに表示するテキストビューのidを格納
+        //textView = findViewById(R.id.text_view);
+
     }
 
     //テキストの初期化
@@ -59,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.spot).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                spot();
+                //spot();
             }
         });
 
@@ -160,6 +176,43 @@ public class LoginActivity extends AppCompatActivity {
             //returing the response
             return requestHandler.sendPostRequest(URLS.URL_LOGIN, params);
         }
+
+
+
+        /**
+         * DBからデータを全件取得し画面に表示する.
+         * @param view
+         */
+        public void readData(View view) {
+            SQLiteDatabase db = helper.getReadableDatabase();
+            Cursor cursor = db.query(
+                    "spot2",
+                    new String[]{"id", "name", "longitude", "latitude"},
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+
+            cursor.moveToFirst();
+
+            StringBuilder sbuilder = new StringBuilder();
+
+            for (int i = 0; i < cursor.getCount(); i++) {
+                sbuilder.append(cursor.getInt(0));
+                sbuilder.append(cursor.getString(1));
+                sbuilder.append(cursor.getDouble(2));
+                sbuilder.append(cursor.getDouble(3));
+                sbuilder.append("\n\n");
+                cursor.moveToNext();
+            }
+
+            cursor.close();
+
+            textView.setText(sbuilder.toString());
+        }
+
     }
 
 
