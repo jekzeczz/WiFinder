@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,14 +40,13 @@ public class LoginActivity extends AppCompatActivity {
 
         init();
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         // DB作成
         helper = new TestOpenHelper(getApplicationContext());
 
         // 変数textViewに表示するテキストビューのidを格納
-        //textView = findViewById(R.id.text_view);
+        textView = findViewById(R.id.textView);
+
 
     }
 
@@ -75,10 +75,46 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.spot).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //spot();
+                Toast.makeText(getApplicationContext(), "asdasd", Toast.LENGTH_SHORT).show();
+                Log.e("readData", "0000000000");
+                readData();
             }
         });
 
+    }
+
+    /**
+     * DBからデータを全件取得し画面に表示する.
+     *
+     */
+    public void readData() {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.query(
+                "spot2",
+                new String[]{"id", "name", "longitude", "latitude"},
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        cursor.moveToFirst();
+
+        StringBuilder sbuilder = new StringBuilder();
+
+        for (int i = 0; i < cursor.getCount(); i++) {
+            sbuilder.append(cursor.getInt(0));
+            sbuilder.append(cursor.getString(1));
+            sbuilder.append(cursor.getDouble(2));
+            sbuilder.append(cursor.getDouble(3));
+            sbuilder.append("\n\n");
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+
+        textView.setText(sbuilder.toString());
     }
 
     //ログイン処理
@@ -159,6 +195,14 @@ public class LoginActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            /*findViewById(R.id.spot).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(getApplicationContext(), "asdasd", Toast.LENGTH_SHORT).show();
+                    readData();
+                }
+            });*/
         }
 
         @Override
@@ -179,39 +223,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-        /**
-         * DBからデータを全件取得し画面に表示する.
-         * @param view
-         */
-        public void readData(View view) {
-            SQLiteDatabase db = helper.getReadableDatabase();
-            Cursor cursor = db.query(
-                    "spot2",
-                    new String[]{"id", "name", "longitude", "latitude"},
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-            );
 
-            cursor.moveToFirst();
-
-            StringBuilder sbuilder = new StringBuilder();
-
-            for (int i = 0; i < cursor.getCount(); i++) {
-                sbuilder.append(cursor.getInt(0));
-                sbuilder.append(cursor.getString(1));
-                sbuilder.append(cursor.getDouble(2));
-                sbuilder.append(cursor.getDouble(3));
-                sbuilder.append("\n\n");
-                cursor.moveToNext();
-            }
-
-            cursor.close();
-
-            textView.setText(sbuilder.toString());
-        }
 
     }
 
@@ -232,9 +244,9 @@ public class LoginActivity extends AppCompatActivity {
             //progressBar.setVisibility(View.VISIBLE);
         }
 
-        @Override
+        //@Override
         // doInBackgroundメソッドの実行後にメインスレッドで実行されます
-        protected void onPostExecute(String s) {
+        protected void onPostExecuteAA(String s) {
             super.onPostExecute(s);
             try {
                 //レスポンスをjsonオブジェクトに変換
