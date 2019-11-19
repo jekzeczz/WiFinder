@@ -76,7 +76,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "asdasd", Toast.LENGTH_SHORT).show();
-                Log.e("readData", "0000000000");
                 readData();
             }
         });

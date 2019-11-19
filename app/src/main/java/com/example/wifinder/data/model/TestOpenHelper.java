@@ -13,19 +13,19 @@ public class TestOpenHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "Sotusei.db";
     private static final String TABLE_NAME = "spot2";
     private static final String ID = "id";
-    private static final String COLUMN_NAME_TITLE = "name";
-    private static final String COLUMN_NAME_A = "longitude"; //経度
-    private static final String COLUMN_NAME_B = "latitude"; // 緯度
+    private static final String NAME = "name";
+    private static final String LONGITUDE = "longitude"; //経度
+    private static final String LATITUDE = "latitude"; // 緯度
 
     /*
     テーブルの作成
      */
     private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
                     ID + "INTEGER PRIMARY KEY," +
-                    COLUMN_NAME_TITLE + "TEXT," +
-                    COLUMN_NAME_A + " REAL," +
-                    COLUMN_NAME_B + " REAL)";
+                    NAME + "TEXT," +
+                    LONGITUDE + " REAL," +
+                    LATITUDE + " REAL)";
 
     /*
     テーブルの削除
@@ -43,17 +43,13 @@ public class TestOpenHelper extends SQLiteOpenHelper {
         // SQLiteファイルがなければSQLiteファイルが作成される
 
         abc.execSQL(
-                SQL_DELETE_ENTRIES
-        );
-
-        abc.execSQL(
                 SQL_CREATE_ENTRIES
         );
 
         //saveData(abc, 4, "東京都大田区羽田空港3-3-2 羽田空港国内線第2旅客ターミナル", 35.551001, 139.788613);
-        saveData(abc, 5, "あああ", 35.54882, 139.783971);
-        saveData(abc, 6, "いいい", 35.54577, 139.768664);
-        saveData(abc, 7, "ううう", 35.729493, 139.718283);
+        saveData(abc, 1, "東京都大田区羽田空港3-3-2", 35.54882, 139.783971);
+        saveData(abc, 2, "いいい", 35.54577, 139.768664);
+        saveData(abc, 3, "ううう", 35.729493, 139.718283);
         saveData(abc, 8, "えええ", 35.684017, 139.766645);
         saveData(abc, 9, "おおお", 35.682543, 139.764287);
 
@@ -66,10 +62,10 @@ public class TestOpenHelper extends SQLiteOpenHelper {
      */
     public void saveData(SQLiteDatabase db, int id, String name, double longitude, double latitude){
         ContentValues values = new ContentValues();
-        values.put("id", id);
-        values.put("name", name);
-        values.put("latitude", longitude);
-        values.put("longitude", latitude);
+        values.put(ID, id);
+        values.put(NAME, name);
+        values.put(LONGITUDE, longitude);
+        values.put(LATITUDE, latitude);
 
         db.insert("spot2", null, values);
     }
