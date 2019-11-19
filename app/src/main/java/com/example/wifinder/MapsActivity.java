@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 
@@ -61,7 +62,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 case R.id.navigation_favorite:
                     Toast.makeText(getApplicationContext(), "favorite", Toast.LENGTH_SHORT).show();
-                    fragment = new TestFragment();
+                    fragment = new FavoriteFragment();
                     loadFragment(fragment);
                     return true;
 
@@ -79,8 +80,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void loadFragment(Fragment fragment) {
         // load fragment
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, fragment);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.map, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
