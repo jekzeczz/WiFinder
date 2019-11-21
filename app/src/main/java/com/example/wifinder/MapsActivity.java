@@ -19,16 +19,21 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
     private GoogleMap mMap;
@@ -38,6 +43,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private double lat;
     private double lng;
+
+    private String[] dataset = new String[20];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             switch (menuItem.getItemId()) {
                 case R.id.navigation_map:
                     Toast.makeText(getApplicationContext(), "map", Toast.LENGTH_SHORT).show();
+
                     return true;
 
                 case R.id.navigation_favorite:
