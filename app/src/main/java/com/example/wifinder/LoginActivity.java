@@ -32,22 +32,13 @@ public class LoginActivity extends AppCompatActivity {
     EditText editTextEmail, editTextPassword;
     private TextView textView;
     private TestOpenHelper helper;
+    private SQLiteDatabase db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         init();
-
-
-        // DB作成
-        helper = new TestOpenHelper(getApplicationContext());
-
-        // 変数textViewに表示するテキストビューのidを格納
-        textView = findViewById(R.id.textView);
-
-
     }
 
     //テキストの初期化
@@ -75,11 +66,23 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.spot).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "asdasd", Toast.LENGTH_SHORT).show();
-                readData();
+                    loadData();
             }
         });
 
+    }
+    /**
+     * データベースの作成
+     */
+    public void loadData() {
+        //DBが存在してないとき
+        if(helper == null){
+            helper = new TestOpenHelper(getApplicationContext());
+        }
+        //中身がないとき
+        if(db == null){
+            db = helper.getReadableDatabase();
+        }
     }
 
     /**
@@ -87,10 +90,12 @@ public class LoginActivity extends AppCompatActivity {
      *
      */
     public void readData() {
-        SQLiteDatabase db = helper.getReadableDatabase();
+        if(helper == null){
+            helper = new TestOpenHelper(getApplicationContext());
+        }
         Cursor cursor = db.query(
                 "spot2",
-                new String[]{"id", "name", "longitude", "latitude"},
+                new String[]{TestOpenHelper.ID, TestOpenHelper.NAME, TestOpenHelper.LONGITUDE, TestOpenHelper.LATITUDE},
                 null,
                 null,
                 null,
@@ -199,7 +204,6 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(getApplicationContext(), "asdasd", Toast.LENGTH_SHORT).show();
-                    readData();
                 }
             });*/
         }

@@ -91,8 +91,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // 経度
         Log.e("#", "経度 Longitude:" + location.getLongitude());
 
-        // Latitude:35.775315
-        // Longitude:139.79716333333332
         //LatLng myLocation = new LatLng(lat, lng);
         //mMap.addMarker(new MarkerOptions().position(myLocation));
 

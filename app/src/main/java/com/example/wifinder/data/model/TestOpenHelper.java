@@ -12,18 +12,18 @@ public class TestOpenHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "Sotusei.db";
     private static final String TABLE_NAME = "spot2";
-    private static final String ID = "id";
-    private static final String NAME = "name";
-    private static final String LONGITUDE = "longitude"; //経度
-    private static final String LATITUDE = "latitude"; // 緯度
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String LONGITUDE = "longitude"; //経度
+    public static final String LATITUDE = "latitude"; // 緯度
 
     /*
     テーブルの作成
      */
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
-                    ID + "INTEGER PRIMARY KEY," +
-                    NAME + "TEXT," +
+                    ID + " INTEGER PRIMARY KEY," +
+                    NAME + " TEXT," +
                     LONGITUDE + " REAL," +
                     LATITUDE + " REAL)";
 
@@ -46,12 +46,12 @@ public class TestOpenHelper extends SQLiteOpenHelper {
                 SQL_CREATE_ENTRIES
         );
 
-        //saveData(abc, 4, "東京都大田区羽田空港3-3-2 羽田空港国内線第2旅客ターミナル", 35.551001, 139.788613);
-        saveData(abc, 1, "東京都大田区羽田空港3-3-2", 35.54882, 139.783971);
-        saveData(abc, 2, "いいい", 35.54577, 139.768664);
-        saveData(abc, 3, "ううう", 35.729493, 139.718283);
-        saveData(abc, 8, "えええ", 35.684017, 139.766645);
-        saveData(abc, 9, "おおお", 35.682543, 139.764287);
+        saveData(abc, 1, "東京都大田区羽田空港3-3-2 羽田空港国内線第2旅客ターミナル", 35.551001, 139.788613);
+        saveData(abc, 2, "東京都大田区羽田空港3-3-2", 35.54882, 139.783971);
+        saveData(abc, 3, "東京都豊島区東池袋3-1-1", 35.54577, 139.768664);
+        saveData(abc, 4, "東京都千代田区丸の内1-6-4", 35.729493, 139.718283);
+        saveData(abc, 5, "東京都千代田区丸の内1-5-1", 35.684017, 139.766645);
+        saveData(abc, 6, "東京都千代田区丸の内2-4-1", 35.682543, 139.764287);
 
         Log.d("debug", "onCreate(SQLiteDatabase db)");
     }
@@ -60,7 +60,7 @@ public class TestOpenHelper extends SQLiteOpenHelper {
     /*
 
      */
-    public void saveData(SQLiteDatabase db, int id, String name, double longitude, double latitude){
+    private void saveData(SQLiteDatabase db, int id, String name, double longitude, double latitude){
         ContentValues values = new ContentValues();
         values.put(ID, id);
         values.put(NAME, name);
