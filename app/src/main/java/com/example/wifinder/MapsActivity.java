@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.wifinder.dummy.DummyContent;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -35,7 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Locale;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener, FavoriteFragment.OnListFragmentInteractionListener {
     private GoogleMap mMap;
     private LocationManager locationManager;
 
@@ -66,7 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             switch (menuItem.getItemId()) {
                 case R.id.navigation_map:
                     Toast.makeText(getApplicationContext(), "map", Toast.LENGTH_SHORT).show();
-
+                    
                     return true;
 
                 case R.id.navigation_favorite:
@@ -210,5 +211,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // static CameraUpdate.newLatLngBounds(LatLngBounds bounds, int width, int height, int padding)
         mMap.moveCamera(CameraUpdateFactory.
                 newLatLngBounds(bounds, width, height, 0));
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
     }
 }

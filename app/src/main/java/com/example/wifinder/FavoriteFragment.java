@@ -1,77 +1,96 @@
 package com.example.wifinder;
 
-
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import com.example.wifinder.dummy.DummyContent;
+import com.example.wifinder.dummy.DummyContent.DummyItem;
 
+import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A fragment representing a list of Items.
+ * <p/>
+ * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * interface.
  */
-public class FavoriteFragment extends Fragment{
+public class FavoriteFragment extends Fragment {
 
-    private Activity mActivity = null;
-    private View mView;
-    private RecyclerFragmentListener mFragmentListener = null;
+    // TODO: Customize parameters
+    private int mColumnCount = 1;
 
-    // RecyclerViewとAdapter
-    private RecyclerView mRecyclerView = null;
-    private RecyclerAdapter mAdapter = null;
+    private OnListFragmentInteractionListener mListener;
 
-    public interface RecyclerFragmentListener {
-        void onRecyclerEvent();
-    }
-
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
     public FavoriteFragment() {
-        // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_favorite, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_favorite_list, container, false);
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (!(activity instanceof RecyclerFragmentListener)) {
-            throw new UnsupportedOperationException(
-                    "Listener is not Implementation.");
-        } else {
-            mFragmentListener = (RecyclerFragmentListener) activity;
+        // Set the adapter
+        if (view instanceof RecyclerView) {
+            Context context = view.getContext();
+            RecyclerView recyclerView = (RecyclerView) view;
+            //if (mColumnCount <= 1) {
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            //} else {
+                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+            //}
+            recyclerView.setAdapter(new FavoriteRecyclerViewAdapter(DummyContent.ITEMS, mListener));
         }
-        mActivity = activity;
+        return view;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        // 適当にデータ作成
-        ArrayList<String> array = new ArrayList<>();
-        array.add("A");
-        array.add("B");
-        array.add("C");
-
-        // この辺りはListViewと同じ
-        // 今回は特に何もしないけど、一応クリック判定を取れる様にする
-        mAdapter = new RecyclerAdapter(mActivity, array, this);
-        mRecyclerView.setAdapter(mAdapter);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnListFragmentInteractionListener) {
+            mListener = (OnListFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnListFragmentInteractionListener");
+        }
     }
 
     @Override
-    public void onRecyclerClicked(View v, int position) {
-        // セルクリック処理
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnListFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onListFragmentInteraction(DummyItem item);
     }
 }

@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         noLoginText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplication(), MapsActivity.class);
+                Intent intent = new Intent(getApplication(), HomeActivity.class);
                 startActivity(intent);
             }
         });
