@@ -9,6 +9,7 @@ public class Spot {
         this.id = id;
         this.spotname = spotName;
         this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     public int getId() {

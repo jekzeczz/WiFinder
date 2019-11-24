@@ -67,7 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             switch (menuItem.getItemId()) {
                 case R.id.navigation_map:
                     Toast.makeText(getApplicationContext(), "map", Toast.LENGTH_SHORT).show();
-                    
+
                     return true;
 
                 case R.id.navigation_favorite:
@@ -141,10 +141,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // 経度
         Log.e("#############", "経度 Longitude:" + location.getLongitude());
 
-        // Latitude:35.775315
-        // Longitude:139.79716333333332
-        LatLng sydney = new LatLng(lat, lng);
-        mMap.addMarker(new MarkerOptions().position(sydney)); //.title("Marker in Sydney")
+        //LatLng myLocation = new LatLng(lat, lng);
+        //mMap.addMarker(new MarkerOptions().position(myLocation));
+
+        //現在位置表示
+        mMap.setMyLocationEnabled(true);
+
+        //ズーム状態で表示
         zoomMap(lat, lng);
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
@@ -192,16 +195,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 REQUEST_PERMISSION, 50, this);
     }
 
-    private void zoomMap(double latitude, double longitude){
+    private void zoomMap(double latitude, double longitude) {
         // 表示する東西南北の緯度経度を設定
-        double south = latitude * (1-0.00005);
-        double west = longitude * (1-0.00005);
-        double north = latitude * (1+0.00005);
-        double east = longitude * (1+0.00005);
+        double south = latitude * (1 - 0.00005);
+        double west = longitude * (1 - 0.00005);
+        double north = latitude * (1 + 0.00005);
+        double east = longitude * (1 + 0.00005);
 
         // LatLngBounds (LatLng southwest, LatLng northeast)
         LatLngBounds bounds = LatLngBounds.builder()
-                .include(new LatLng(south , west))
+                .include(new LatLng(south, west))
                 .include(new LatLng(north, east))
                 .build();
 

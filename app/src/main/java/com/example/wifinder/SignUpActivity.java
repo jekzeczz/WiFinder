@@ -105,7 +105,7 @@ public class SignUpActivity extends AppCompatActivity {
             try {
                 JSONObject obj = new JSONObject(s);
                 if (!obj.getBoolean("error")){
-                    Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
                     JSONObject userJson = obj.getJSONObject("user");
                     User user = new User(
                             userJson.getInt("id"),

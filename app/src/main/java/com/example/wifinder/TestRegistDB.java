@@ -65,7 +65,7 @@ public class TestRegistDB extends AppCompatActivity {
      * データを保存する.
      * @param view
      */
-    /*
+/*
     public void saveData(View view) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -79,5 +79,6 @@ public class TestRegistDB extends AppCompatActivity {
 
         db.insert("testdb", null, values);
     }
-     */
+*/
+
 }
