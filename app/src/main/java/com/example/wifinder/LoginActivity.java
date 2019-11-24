@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("##", "###");
                     //マップ画面に遷移
                     finish();
-                    Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                     startActivity(intent);
 
                 } else {

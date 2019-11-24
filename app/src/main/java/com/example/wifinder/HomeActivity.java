@@ -12,10 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 public class HomeActivity extends AppCompatActivity implements FavoriteFragment.OnListFragmentInteractionListener{
 
@@ -23,6 +19,8 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        getSupportActionBar().hide();
+
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
         Fragment fragment;
@@ -48,23 +46,34 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
             Fragment fragment;
             switch (menuItem.getItemId()) {
                 case R.id.navigation_map:
-                    Toast.makeText(getApplicationContext(), "map", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "map", Toast.LENGTH_SHORT).show();
+                    getSupportActionBar().hide();
                     fragment = new MapsFragment();
                     loadFragment(fragment);
                     return true;
 
                 case R.id.navigation_favorite:
-                    Toast.makeText(getApplicationContext(), "favorite", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "favorite", Toast.LENGTH_SHORT).show();
+                    getSupportActionBar().show();
+                    getSupportActionBar().setTitle("Favorite");
                     fragment = new FavoriteFragment();
                     loadFragment(fragment);
                     return true;
 
                 case R.id.navigation_review:
-                    Toast.makeText(getApplicationContext(), "review", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "review", Toast.LENGTH_SHORT).show();
+                    getSupportActionBar().show();
+                    getSupportActionBar().setTitle("Review");
+                    fragment = new TestFragment();
+                    loadFragment(fragment);
                     return true;
 
                 case R.id.navigation_settings:
-                    Toast.makeText(getApplicationContext(), "settings", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "settings", Toast.LENGTH_SHORT).show();
+                    getSupportActionBar().show();
+                    getSupportActionBar().setTitle("Settings");
+                    fragment = new SettingsFragment();
+                    loadFragment(fragment);
                     return true;
             }
             return false;
