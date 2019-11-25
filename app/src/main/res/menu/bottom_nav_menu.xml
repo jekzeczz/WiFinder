@@ -12,9 +12,9 @@
         android:title="FAVORITE" />
 
     <item
-        android:id="@+id/navigation_user"
-        android:icon="@drawable/ic_user_solid"
-        android:title="USER" />
+        android:id="@+id/navigation_review"
+        android:icon="@drawable/ic_pencil_alt_solid"
+        android:title="MY REVIEW" />
 
     <item
         android:id="@+id/navigation_settings"
