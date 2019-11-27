@@ -31,6 +31,11 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.data.geojson.GeoJsonLayer;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -80,6 +85,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
             return;
+        }
+
+        try {
+            GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.geojson, getActivity());
+            layer.addLayerToMap();
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
         }
 
 
