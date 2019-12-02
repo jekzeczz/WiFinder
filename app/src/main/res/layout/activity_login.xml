@@ -57,7 +57,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.2"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:backgroundTint="#158bff"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"/>
 
     <TextView
         android:id="@+id/haveAnAccount"
@@ -80,7 +85,12 @@
         android:text="sign up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/haveAnAccount" />
+        app:layout_constraintTop_toBottomOf="@id/haveAnAccount"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:backgroundTint="#158bff"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"/>
 
     <ProgressBar
         android:id="@+id/loading"
