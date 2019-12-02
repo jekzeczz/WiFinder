@@ -1,5 +1,7 @@
 package com.example.wifinder;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -52,8 +54,11 @@ public class RequestHandler {
     }
 
     public String sendPostRequest2(String requestURL) {
+
         URL url;
         StringBuilder sb = new StringBuilder();
+        HashMap<String, String> params = new HashMap<>();
+        params.put("judge", "true");
         try {
             url = new URL(requestURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -66,6 +71,7 @@ public class RequestHandler {
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));
+            writer.write(getPostDataString(params));
             writer.flush();
             writer.close();
             os.close();

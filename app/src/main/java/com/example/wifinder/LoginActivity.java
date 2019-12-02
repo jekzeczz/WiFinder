@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,11 +18,12 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 import org.json.JSONException;
+import org.json.JSONArray;
 
 import com.example.wifinder.data.URLS;
-import com.example.wifinder.data.model.Spot;
 import com.example.wifinder.data.model.TestOpenHelper;
 import com.example.wifinder.data.model.User;
+
 
 import java.util.HashMap;
 
@@ -33,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView textView;
     private TestOpenHelper helper;
     private SQLiteDatabase db;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,12 +84,14 @@ public class LoginActivity extends AppCompatActivity {
         if(db == null){
             db = helper.getReadableDatabase();
         }
+        GetSpot gp = new GetSpot();
+        gp.execute();
     }
 
     /**
      * DBからデータを全件取得し画面に表示する.
      *
-     */
+     *//*
     public void readData() {
         if(helper == null){
             helper = new TestOpenHelper(getApplicationContext());
@@ -119,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
         cursor.close();
 
         textView.setText(sbuilder.toString());
-    }
+    }*/
 
     //ログイン処理
     private void userLogin() {
@@ -142,7 +145,10 @@ public class LoginActivity extends AppCompatActivity {
         ul.execute();
     }
 
-    class UserLogin extends AsyncTask<Void, Void, String> { //非同期処理メソッド
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    class UserLogin  extends AsyncTask<Void, Void, String> { //非同期処理メソッド
         ProgressBar progressBar;
         String email, password;
         UserLogin(String email,String password) {
@@ -171,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (!obj.getBoolean("error")) {
                     Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
 
-                    //レスポンスからuserをゲット
+                    //レスポンスからspotをゲット
                     JSONObject userJson = obj.getJSONObject("user");
 
                     //userオブジェクトを生成
@@ -200,12 +206,7 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            /*findViewById(R.id.spot).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(getApplicationContext(), "asdasd", Toast.LENGTH_SHORT).show();
-                }
-            });*/
+
         }
 
         @Override
@@ -229,11 +230,105 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    class GetSpot extends AsyncTask<Void, Void, String> { //非同期処理メソッド
+        ProgressBar progressBar;
+        int id;
+        String name;
+        Double longitude, latitude;
+
+
+        GetSpot() {}
+
+        @Override
+        // doInBackgroundメソッドの実行前にメインスレッドで実行されます
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar = findViewById(R.id.loading);
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        // doInBackgroundメソッドの実行後にメインスレッドで実行されます
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            progressBar.setVisibility(View.GONE);
+            TestOpenHelper setSpot = new TestOpenHelper(getApplicationContext());
+            try {
+                //レスポンスをjsonオブジェクトに変換
+                JSONObject obj = new JSONObject(s);
+                Log.d("#", "OBJ : " + obj);
+                //レスポンスにエラーが無い場合
+                if (!obj.getBoolean("error")) {
+                    //Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+
+                    //レスポンスからuserをゲット
+                    JSONObject spotJson = obj.getJSONObject("spot");
+                    Log.d("#", "SPOT : " + spotJson);
+                    int length = spotJson.length();
+                    Log.d("#", "JSON  : " + length);
+
+
+                    //userオブジェクトを生成
+                    for(int i=1; i<=length; i++) {
+                        JSONObject n = spotJson.getJSONObject(Integer.toString(i));
+                    id = n.getInt("id");
+                    name = n.getString("spotname");
+                    longitude = n.getDouble("longitude");
+                    latitude = n.getDouble("latitude");
+
+                    setSpot.saveData(db, id, name, longitude, latitude);
+
+                }
+
+                    //Log.d("##", "id : " + user.getId());
+                    //Log.d("##", "username : " + user.getUsername());
+                    //Log.d("##", "email : " + user.getEmail());
+
+                    //storing the user in shared preferences
+                   // PrefManager.getInstance(getApplicationContext()).setUserLogin(user);
+                    //Log.d("##", "###");
+                    //マップ画面に遷移
+                    finish();
+                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    startActivity(intent);
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Invalid email or password", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            //creating request handler object
+            RequestHandler requestHandler = new RequestHandler();
+
+            //creating request parameters
+            //HashMap<String, String> params = new HashMap<>();
+            //params.put("email", email);
+           // params.put("password", password);
+
+           // Log.d("#", "JSON Object1 : " + email);
+           // Log.d("#", "JSON Object2 : " + password);
+            //returing the response
+            return requestHandler.sendPostRequest2(URLS.SPOT_ROOT);
+        }
 
 
 
 
-    private void spot() {
+
+    }
+
+    /*private void spot() {
         GetSpot gs = new GetSpot();
         gs.execute();
     }
@@ -269,8 +364,6 @@ public class LoginActivity extends AppCompatActivity {
                             userJson.getDouble("longitude")
                     );
 
-                    Log.d("##", "id : " + spot.getId());
-                    Log.d("##", "username : " + spot.getSpotname());
 
                     //storing the user in shared preferences
                     //PrefManager.getInstance(getApplicationContext()).setUserLogin(user);
@@ -296,5 +389,5 @@ public class LoginActivity extends AppCompatActivity {
 
             return requestHandler.sendPostRequest2(URLS.SPOT_ROOT);
         }
-    }
+    }*/
 }
