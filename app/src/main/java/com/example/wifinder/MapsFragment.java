@@ -57,12 +57,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -179,7 +173,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, REQUEST_PERMISSION, 50, this);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, REQUEST_PERMISSION, 50, this);
-
     }
 
     private void zoomMap(double latitude, double longitude) {

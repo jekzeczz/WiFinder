@@ -40,7 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 finish();
                 //PrefManager.getInstance(getApplicationContext()).logout();
-                PrefManager.getInstance(getApplication()).logout();
+                PrefManager.getInstance(ProfileActivity.this).logout();
             }
         });
     }
