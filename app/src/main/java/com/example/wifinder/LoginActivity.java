@@ -29,11 +29,9 @@ import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText editTextEmail, editTextPassword;
-    private TextView textView;
+    private EditText editTextEmail, editTextPassword;
     private TestOpenHelper helper;
     private SQLiteDatabase db;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //テキストの初期化
-    void init(){
+    void init() {
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
         //if user presses on login calling the method login
@@ -67,23 +65,24 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.spot).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    loadData();
+                loadData();
             }
         });
 
 
 
     }
+
     /**
      * データベースの作成
      */
     public void loadData() {
         //DBが存在してないとき
-        if(helper == null){
+        if (helper == null) {
             helper = new TestOpenHelper(getApplicationContext());
         }
         //中身がないとき
-        if(db == null){
+        if (db == null) {
             db = helper.getReadableDatabase();
         }
         GetSpot gp = new GetSpot();
@@ -92,7 +91,6 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * DBからデータを全件取得し画面に表示する.
-     *
      *//*
     public void readData() {
         if(helper == null){
@@ -143,17 +141,18 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
         //すべて入力OK
-        UserLogin ul = new UserLogin(email,password);
+        UserLogin ul = new UserLogin(email, password);
         ul.execute();
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    class UserLogin  extends AsyncTask<Void, Void, String> { //非同期処理メソッド
+    class UserLogin extends AsyncTask<Void, Void, String> { //非同期処理メソッド
         ProgressBar progressBar;
         String email, password;
-        UserLogin(String email,String password) {
+
+        UserLogin(String email, String password) {
             this.email = email;
             this.password = password;
         }
@@ -207,8 +206,6 @@ public class LoginActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
         }
 
         @Override
@@ -226,24 +223,16 @@ public class LoginActivity extends AppCompatActivity {
             //returing the response
             return requestHandler.sendPostRequest(URLS.URL_LOGIN, params);
         }
-
-
-
-
-
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     class GetSpot extends AsyncTask<Void, Void, String> { //非同期処理メソッド
         ProgressBar progressBar;
         int id;
         String name;
         Double longitude, latitude;
-
-
-        GetSpot() {}
 
         @Override
         // doInBackgroundメソッドの実行前にメインスレッドで実行されます
@@ -273,25 +262,24 @@ public class LoginActivity extends AppCompatActivity {
                     int length = spotJson.length();
                     Log.d("#", "JSON  : " + length);
 
-
                     //userオブジェクトを生成
-                    for(int i=1; i<=length; i++) {
+                    for (int i = 1; i <= length; i++) {
                         JSONObject n = spotJson.getJSONObject(Integer.toString(i));
-                    id = n.getInt("id");
-                    name = n.getString("spotname");
-                    longitude = n.getDouble("longitude");
-                    latitude = n.getDouble("latitude");
+                        id = n.getInt("id");
+                        name = n.getString("spotname");
+                        longitude = n.getDouble("longitude");
+                        latitude = n.getDouble("latitude");
 
-                    setSpot.saveData(db, id, name, longitude, latitude);
+                        setSpot.saveData(db, id, name, longitude, latitude);
 
-                }
+                    }
 
                     //Log.d("##", "id : " + user.getId());
                     //Log.d("##", "username : " + user.getUsername());
                     //Log.d("##", "email : " + user.getEmail());
 
                     //storing the user in shared preferences
-                   // PrefManager.getInstance(getApplicationContext()).setUserLogin(user);
+                    // PrefManager.getInstance(getApplicationContext()).setUserLogin(user);
                     //Log.d("##", "###");
                     //マップ画面に遷移
                     finish();
@@ -304,8 +292,6 @@ public class LoginActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
         }
 
         @Override
@@ -316,18 +302,13 @@ public class LoginActivity extends AppCompatActivity {
             //creating request parameters
             //HashMap<String, String> params = new HashMap<>();
             //params.put("email", email);
-           // params.put("password", password);
+            // params.put("password", password);
 
-           // Log.d("#", "JSON Object1 : " + email);
-           // Log.d("#", "JSON Object2 : " + password);
+            // Log.d("#", "JSON Object1 : " + email);
+            // Log.d("#", "JSON Object2 : " + password);
             //returing the response
             return requestHandler.sendPostRequest2(URLS.SPOT_ROOT);
         }
-
-
-
-
-
     }
 
     /*private void spot() {
