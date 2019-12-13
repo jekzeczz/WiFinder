@@ -20,7 +20,7 @@
         <activity android:name=".ProfileActivity"></activity>
         <activity
             android:name=".HomeActivity"
-            android:label="Home" />
+            android:label="Home" />F
         <activity android:name=".SignUpActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

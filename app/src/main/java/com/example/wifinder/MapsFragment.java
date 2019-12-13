@@ -5,10 +5,12 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -23,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 
+import com.example.wifinder.data.model.TestOpenHelper;
+import com.example.wifinder.data.model.Spot;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -36,6 +40,8 @@ import com.google.maps.android.data.geojson.GeoJsonLayer;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -51,8 +57,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     private double lat;
     private double lng;
+    private TestOpenHelper helper;
+    private List<Spot> spots = new ArrayList<>();
+    private int row;
 
     public MapsFragment() {
+
         // Required empty public constructor
     }
 
@@ -84,17 +94,77 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         try {
             GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.geojson, getActivity());
             layer.addLayerToMap();
+            readData();
+            Log.d("#", "spotData 111111" + row);
+            for(int i = 0; i < row; i++) {
+                LatLng place = new LatLng(spots.get(i).getLatitude(), spots.get(i).getLongitude());
+                Log.d("#", "spotData" + spots.get(i).getLatitude() + " : " + spots.get(i).getLongitude());
+                mMap.addMarker(new MarkerOptions().position(place).title(spots.get(i).getSpotname()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place, 15));
+
+                LatLng plac = new LatLng(35.7000000, 139.660000);
+                Log.d("#", "spotData" + spots.get(i).getLatitude() + " : " + spots.get(i).getLongitude());
+                mMap.addMarker(new MarkerOptions().position(plac).title("トウキョー"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(plac, 15));
+
+            }
+
         } catch (IOException | JSONException e) {
             e.printStackTrace();
+            Log.d("#", "spotData 222222");
         }
+
+
 
 
         locationStart();
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, REQUEST_PERMISSION, 50, this);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, REQUEST_PERMISSION, 50, this);
 
+
+
         us.setZoomControlsEnabled(true);
         //Toast.makeText(getActivity(), "yes!!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void readData(){
+        helper = new TestOpenHelper(getActivity());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        row = 0;
+
+        Cursor cursor = db.query(
+                "spot2",
+                new String[] { "id", "name", "latitude", "longitude"},
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        cursor.moveToFirst();
+
+        for (int i = 0; i < cursor.getCount(); i++) {
+            Spot n = new Spot( cursor.getInt(0), cursor.getString(1), cursor.getDouble(2), cursor.getDouble(3));
+            spots.add(n);
+            row++;
+
+            //Log.d("#", "spotData" + n);
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+
+        //Log.d("#", "spotData" + )
+
+    }
+
+    public void onGetArea(View view) {
+       // GeoPoint gpo = mView.getMapCenter();
+        double topLatitude = 35.8500000;
+        double bottomLatitude = 35.5300000;
+        double leftLongitude = 138.8000000;
+        double rightLongitude = 140.0000000;
     }
 
     @Override
@@ -130,7 +200,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
         //現在位置表示
         mMap.setMyLocationEnabled(true);
-        zoomMap(lat, lng);
+        //zoomMap(lat, lng);
     }
 
     @Override
