@@ -3,7 +3,7 @@ package com.example.wifinder.data.model;
 public class Spot {
     private int id;
     private String spotname;
-    private double longitude, latitude; // 緯度　経度
+    private double longitude, latitude; // 経度　緯度
 
     public Spot(int id, String spotName, double longitude, double latitude) {
         this.id = id;

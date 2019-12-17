@@ -34,6 +34,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 
@@ -95,44 +96,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.geojson, getActivity());
             layer.addLayerToMap();
 
-//            Location location
-//            lat = location.getLatitude();
-//            lng = location.getLongitude();
-//            Log.e("#########", "緯度 Latitude:" + location.getLatitude());
-//            // 経度
-//            Log.e("#############", "経度 Longitude:" + location.getLongitude());
-//
-//            // Latitude:35.775315
-//            // Longitude:139.79716333333332
-//            //LatLng sydney = new LatLng(lat, lng);
-//            //mMap.addMarker(new MarkerOptions().position(sydney)); //.title("Marker in Sydney")
-//
-//            //現在位置表示
-//            mMap.setMyLocationEnabled(true);
-//            zoomMap(lat, lng);
-
             readData();
-            Log.d("#", "spotData 111111" + row);
+            Log.d("#", "spotData row" + row);
             for(int i = 0; i < row; i++) {
                 LatLng place = new LatLng(spots.get(i).getLatitude(), spots.get(i).getLongitude());
-                Log.d("#", "spotData" + spots.get(i).getLatitude() + " : " + spots.get(i).getLongitude());
+                Log.d("#", "spotData latitude : longitude " + spots.get(i).getLatitude() + " : " + spots.get(i).getLongitude());
                 mMap.addMarker(new MarkerOptions().position(place).title(spots.get(i).getSpotname()));
-               // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place, 15));
-
-                //LatLng plac = new LatLng(35.7000000, 139.660000);
-                //Log.d("#", "spotData" + spots.get(i).getLatitude() + " : " + spots.get(i).getLongitude());
-                //mMap.addMarker(new MarkerOptions().position(plac).title("トウキョー"));
-               // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(plac, 15));
+                Log.d("#", "spotData Name " + spots.get(i).getSpotname());
 
             }
-
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            Log.d("#", "spotData 222222");
         }
-
-
-
 
         locationStart();
         //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, REQUEST_PERMISSION, 50, this);
@@ -151,7 +126,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
         Cursor cursor = db.query(
                 "spot2",
-                new String[] { "id", "name", "latitude", "longitude"},
+                new String[] { "id", "name", "longitude", "latitude"},
                 null,
                 null,
                 null,
@@ -210,11 +185,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         // 経度
         Log.e("#############", "経度 Longitude:" + location.getLongitude());
 
-        // Latitude:35.775315
-        // Longitude:139.79716333333332
-        //LatLng sydney = new LatLng(lat, lng);
-        //mMap.addMarker(new MarkerOptions().position(sydney)); //.title("Marker in Sydney")
-
         //現在位置表示
         mMap.setMyLocationEnabled(true);
         zoomMap(lat, lng);
@@ -258,8 +228,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             return;
         }
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, REQUEST_PERMISSION, 1, this);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, REQUEST_PERMISSION, 1, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, REQUEST_PERMISSION, 50, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, REQUEST_PERMISSION, 50, this);
     }
 
     private void zoomMap(double latitude, double longitude) {
