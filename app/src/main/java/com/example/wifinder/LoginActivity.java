@@ -133,6 +133,8 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             progressBar.setVisibility(View.GONE);
+            TestOpenHelper setUser = new TestOpenHelper(getApplicationContext());
+
             try {
                 //レスポンスをjsonオブジェクトに変換
                 JSONObject obj = new JSONObject(s);
@@ -150,6 +152,10 @@ public class LoginActivity extends AppCompatActivity {
                             userJson.getString("username"),
                             userJson.getString("email")
                     );
+
+                    setUser.saveUser(db, user.getUsername(), user.getEmail());
+
+
 
                     Log.d("##", "id : " + user.getId());
                     Log.d("##", "username : " + user.getUsername());

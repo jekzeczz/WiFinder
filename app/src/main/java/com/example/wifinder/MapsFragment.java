@@ -100,9 +100,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             Log.d("#", "spotData row" + row);
             for(int i = 0; i < row; i++) {
                 LatLng place = new LatLng(spots.get(i).getLatitude(), spots.get(i).getLongitude());
-                Log.d("#", "spotData latitude : longitude " + spots.get(i).getLatitude() + " : " + spots.get(i).getLongitude());
+                //Log.d("#", "spotData latitude : longitude " + spots.get(i).getLatitude() + " : " + spots.get(i).getLongitude());
                 mMap.addMarker(new MarkerOptions().position(place).title(spots.get(i).getSpotname()));
-                Log.d("#", "spotData Name " + spots.get(i).getSpotname());
+                //Log.d("#", "spotData Name " + spots.get(i).getSpotname());
 
             }
         } catch (IOException | JSONException e) {
