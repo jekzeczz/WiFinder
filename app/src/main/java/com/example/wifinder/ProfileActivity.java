@@ -11,7 +11,8 @@ import com.example.wifinder.data.model.User;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    TextView textViewId, textViewUsername, textViewEmail, textViewGender;
+    //TextView textViewId, textViewUsername, textViewEmail;
+    TextView textViewUsername, textViewEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +23,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     void init() {
-        textViewId = findViewById(R.id.textViewId);
+        //textViewId = findViewById(R.id.textViewId);
         textViewUsername = findViewById(R.id.textViewUsername);
         textViewEmail = findViewById(R.id.textViewEmail);
 
@@ -30,7 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
         User user = PrefManager.getInstance(this).getUser();
 
         //setting the values to the textviews
-        textViewId.setText(String.valueOf(user.getId()));
+        //textViewId.setText(String.valueOf(user.getId()));
         textViewUsername.setText(user.getUsername());
         textViewEmail.setText(user.getEmail());
 
@@ -39,8 +40,8 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-                //PrefManager.getInstance(getApplicationContext()).logout();
-                PrefManager.getInstance(ProfileActivity.this).logout();
+                PrefManager.getInstance(getApplicationContext()).logout();
+                //PrefManager.getInstance(ProfileActivity.this).logout();
             }
         });
     }

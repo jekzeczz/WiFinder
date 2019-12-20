@@ -18,7 +18,7 @@
             android:paddingTop="8dp"
             android:paddingRight="16dp"
             android:paddingBottom="8dp"
-            android:text="My Profile"
+            android:text="@string/res_profile"
             android:clickable="true"/>
 
         <View
@@ -34,7 +34,7 @@
             android:paddingTop="8dp"
             android:paddingRight="16dp"
             android:paddingBottom="8dp"
-            android:text="setting 2" />
+            android:text="@string/res_languages" />
 
         <View
             android:layout_width="match_parent"
