@@ -11,27 +11,52 @@ public class TestOpenHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 3;
 
     private static final String DATABASE_NAME = "Sotusei.db";
-    private static final String TABLE_NAME = "spot2";
+    private static final String TABLE_SPOT = "spot2";
+    private static final String TABLE_USER = "user";
+    private static final String TABLE_FAVORITE = "favorite";
+
     private static final String ID = "id";
     private static final String NAME = "name";
     private static final String LONGITUDE = "longitude"; //経度
     private static final String LATITUDE = "latitude"; // 緯度
 
+    private static final String EMAIL = "email";
+
+    private static final String SPOT_ID = "spot";
+    private static final String USER_ID = "user";
+
+
+
     /*
-    テーブルの作成
+    テーブルの作成()
      */
-    private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+    private static final String SQL_CREATE_SPOTS =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_SPOT + " (" +
                     ID + " INTEGER PRIMARY KEY," +
                     NAME + " TEXT," +
                     LONGITUDE + " REAL," +
                     LATITUDE + " REAL)";
 
+    private static final String SQL_CREATE_USERS =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_USER + " (" +
+                    ID + " INTEGER PRIMARY KEY autoincrement," +
+                    NAME + " TEXT," +
+                    EMAIL + " TEXT)";
+
+
+    private static final String SQL_CREATE_FAVORITES =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_FAVORITE + " (" +
+                    ID + " INTEGER PRIMARY KEY autoincrement," +
+                    SPOT_ID + " INTEGER," +
+                    USER_ID + " INTEGER)";
+
+
+
     /*
     テーブルの削除
      */
     private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + TABLE_NAME;
+            "DROP TABLE IF EXISTS " + TABLE_SPOT;
 
     public TestOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -42,20 +67,12 @@ public class TestOpenHelper extends SQLiteOpenHelper {
         // テーブル作成
         // SQLiteファイルがなければSQLiteファイルが作成される
 
-        abc.execSQL(
-                SQL_CREATE_ENTRIES
-        );
-
-        //saveData(abc, 1, "東京都大田区羽田空港3-3-2 羽田空港国内線第2旅客ターミナル", 35.551001, 139.788613);
-        //saveData(abc, 2, "東京都大田区羽田空港3-3-2", 35.54882, 139.783971);
-        //saveData(abc, 3, "東京都豊島区東池袋3-1-1", 35.54577, 139.768664);
-        //saveData(abc, 4, "東京都千代田区丸の内1-6-4", 35.729493, 139.718283);
-        //saveData(abc, 5, "東京都千代田区丸の内1-5-1", 35.684017, 139.766645);
-        //saveData(abc, 6, "東京都千代田区丸の内2-4-1", 35.682543, 139.764287);
+        abc.execSQL(SQL_CREATE_SPOTS);
+        abc.execSQL(SQL_CREATE_USERS);
+        abc.execSQL(SQL_CREATE_FAVORITES);
 
         Log.d("debug", "onCreate(SQLiteDatabase db)");
     }
-
 
     /*
 
@@ -68,6 +85,22 @@ public class TestOpenHelper extends SQLiteOpenHelper {
         values.put(LATITUDE, latitude);
 
         db.insert("spot2", null, values);
+    }
+
+    public void saveUser(SQLiteDatabase db, String name, String email){
+        ContentValues values = new ContentValues();
+        values.put(NAME, name);
+        values.put(EMAIL, email);
+
+        db.insert("user", null, values);
+    }
+
+    public void saveFavo(SQLiteDatabase db, String name, int spot, int user){
+        ContentValues values = new ContentValues();
+        values.put(SPOT_ID, spot);
+        values.put(USER_ID, user);
+
+        db.insert("favorite", null, values);
     }
 
     @Override

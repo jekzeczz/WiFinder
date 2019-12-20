@@ -13,12 +13,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
 import org.json.JSONException;
-import org.json.JSONArray;
 
 import com.example.wifinder.data.URLS;
 import com.example.wifinder.data.model.TestOpenHelper;
@@ -83,45 +81,10 @@ public class LoginActivity extends AppCompatActivity {
         //中身がないとき
         if (db == null) {
             db = helper.getReadableDatabase();
+            GetSpot gp = new GetSpot();
+            gp.execute();
         }
-        GetSpot gp = new GetSpot();
-        gp.execute();
     }
-
-    /**
-     * DBからデータを全件取得し画面に表示する.
-     *//*
-    public void readData() {
-        if(helper == null){
-            helper = new TestOpenHelper(getApplicationContext());
-        }
-        Cursor cursor = db.query(
-                "spot2",
-                new String[]{TestOpenHelper.ID, TestOpenHelper.NAME, TestOpenHelper.LONGITUDE, TestOpenHelper.LATITUDE},
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-
-        cursor.moveToFirst();
-
-        StringBuilder sbuilder = new StringBuilder();
-
-        for (int i = 0; i < cursor.getCount(); i++) {
-            sbuilder.append(cursor.getInt(0));
-            sbuilder.append(cursor.getString(1));
-            sbuilder.append(cursor.getDouble(2));
-            sbuilder.append(cursor.getDouble(3));
-            sbuilder.append("\n\n");
-            cursor.moveToNext();
-        }
-
-        cursor.close();
-
-        textView.setText(sbuilder.toString());
-    }*/
 
     //ログイン処理
     private void userLogin() {
@@ -166,6 +129,8 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             progressBar.setVisibility(View.GONE);
+            TestOpenHelper setUser = new TestOpenHelper(getApplicationContext());
+
             try {
                 //レスポンスをjsonオブジェクトに変換
                 JSONObject obj = new JSONObject(s);
@@ -183,6 +148,10 @@ public class LoginActivity extends AppCompatActivity {
                             userJson.getString("username"),
                             userJson.getString("email")
                     );
+
+                    setUser.saveUser(db, user.getUsername(), user.getEmail());
+
+
 
                     Log.d("##", "id : " + user.getId());
                     Log.d("##", "username : " + user.getUsername());
@@ -304,66 +273,4 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /*private void spot() {
-        GetSpot gs = new GetSpot();
-        gs.execute();
-    }
-
-    private class GetSpot extends AsyncTask<Void, Void, String> {
-        @Override
-        // doInBackgroundメソッドの実行前にメインスレッドで実行されます
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //progressBar = findViewById(R.id.loading);
-            //progressBar.setVisibility(View.VISIBLE);
-        }
-
-        //@Override
-        // doInBackgroundメソッドの実行後にメインスレッドで実行されます
-        protected void onPostExecuteAA(String s) {
-            super.onPostExecute(s);
-            try {
-                //レスポンスをjsonオブジェクトに変換
-                JSONObject obj = new JSONObject(s);
-                Log.d("#", "JSON Object : " + obj);
-                //レスポンスにエラーが無い場合
-                if (!obj.getBoolean("error")) {
-
-                    //レスポンスからuserをゲット
-                    JSONObject userJson = obj.getJSONObject("spot");
-
-                    //userオブジェクトを生成
-                    Spot spot = new Spot(
-                            userJson.getInt("id"),
-                            userJson.getString("spotname"),
-                            userJson.getDouble("latitude"),
-                            userJson.getDouble("longitude")
-                    );
-
-
-                    //storing the user in shared preferences
-                    //PrefManager.getInstance(getApplicationContext()).setUserLogin(user);
-                    Log.d("##", "###");
-                    //マップ画面に遷移
-                    //finish();
-                    //Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                    //startActivity(intent);
-
-                } else {
-                    //Toast.makeText(getApplicationContext(), "Invalid email or password", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            RequestHandler requestHandler = new RequestHandler();
-
-            HashMap<String, String> params = new HashMap<>();
-
-            return requestHandler.sendPostRequest2(URLS.SPOT_ROOT);
-        }
-    }*/
 }
