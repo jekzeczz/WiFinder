@@ -4,6 +4,7 @@ package com.example.wifinder;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -31,15 +32,28 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        TextView textView = view.findViewById(R.id.setting1);
-        textView.setOnClickListener(this);
+        TextView textView1 = view.findViewById(R.id.setting1);
+        TextView textView2 = view.findViewById(R.id.setting2);
+        textView1.setOnClickListener(this);
+        textView2.setOnClickListener(this);
 
         return view;
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(getActivity(), ProfileActivity.class);
-        startActivity(intent);
+        Intent intent;
+
+        switch (v.getId()) {
+            case R.id.setting1:
+                intent = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.setting2:
+                DialogFragment newFragment = new SelectLanguageDialogFragment();
+                newFragment.show(getActivity().getSupportFragmentManager(), "Select Languages");
+                break;
+        }
     }
 }

@@ -4,21 +4,21 @@
     <item
         android:id="@+id/navigation_map"
         android:icon="@drawable/ic_map_marker_alt_solid"
-        android:title="MAP" />
+        android:title="@string/res_map" />
 
     <item
         android:id="@+id/navigation_favorite"
         android:icon="@drawable/ic_heart_solid"
-        android:title="FAVORITE" />
+        android:title="@string/res_favorite" />
 
     <item
         android:id="@+id/navigation_review"
         android:icon="@drawable/ic_pencil_alt_solid"
-        android:title="MY REVIEW" />
+        android:title="@string/res_review" />
 
     <item
         android:id="@+id/navigation_settings"
         android:icon="@drawable/ic_cog_solid"
-        android:title="SETTINGS" />
+        android:title="@string/res_settings" />
 
 </menu>
