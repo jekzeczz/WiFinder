@@ -43,6 +43,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -103,6 +104,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 //Log.d("#", "spotData latitude : longitude " + spots.get(i).getLatitude() + " : " + spots.get(i).getLongitude());
                 mMap.addMarker(new MarkerOptions().position(place).title(spots.get(i).getSpotname()));
                 //Log.d("#", "spotData Name " + spots.get(i).getSpotname());
+
+
+
+
+                /**
+                 * タッチするとマーカー増やすウイルス
+                 */
+//                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+//                    @Override
+//                    public void onMapClick(LatLng tapLocation) {
+//                        // tapされた位置の緯度経度
+//                        LatLng place = new LatLng(tapLocation.latitude, tapLocation.longitude);
+//                        String str = String.format(Locale.US, "%f, %f", tapLocation.latitude, tapLocation.longitude);
+//                        mMap.addMarker(new MarkerOptions().position(place).title(str));
+//                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place, 14));
+//                    }
+//                });
 
             }
         } catch (IOException | JSONException e) {
