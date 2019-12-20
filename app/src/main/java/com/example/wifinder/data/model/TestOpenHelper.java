@@ -42,6 +42,7 @@ public class TestOpenHelper extends SQLiteOpenHelper {
                     ID + " INTEGER PRIMARY KEY autoincrement," +
                     NAME + " TEXT," +
                     EMAIL + " TEXT)";
+             //       ID + " INTEGER PRIMARY KEY autoincrement)";
 
 
     private static final String SQL_CREATE_FAVORITES =
@@ -89,8 +90,11 @@ public class TestOpenHelper extends SQLiteOpenHelper {
 
     public void saveUser(SQLiteDatabase db, String name, String email){
         ContentValues values = new ContentValues();
+        //values.put(ID, 10);
         values.put(NAME, name);
         values.put(EMAIL, email);
+
+        Log.d("#", "userData name " + name + " email " + email);
 
         db.insert("user", null, values);
     }
