@@ -59,15 +59,6 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        /*
-        findViewById(R.id.spot).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadSpot();
-            }
-        });
-         */
     }
 
     /**
@@ -156,8 +147,9 @@ public class LoginActivity extends AppCompatActivity {
                     );
 
                     loadDB();
-                    setUser.saveUser(db, user.getUsername(), user.getEmail());
+                    setUser.saveUser(db, user.getId(), user.getUsername(), user.getEmail());
 
+                    loadSpot();
 
 
                     Log.d("##", "id : " + user.getId());

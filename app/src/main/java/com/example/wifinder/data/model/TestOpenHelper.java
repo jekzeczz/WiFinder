@@ -22,8 +22,8 @@ public class TestOpenHelper extends SQLiteOpenHelper {
 
     private static final String EMAIL = "email";
 
-    private static final String SPOT_ID = "spot";
-    private static final String USER_ID = "user";
+    private static final String SPOT_ID = "spotID";
+    private static final String USER_ID = "userID";
 
 
 
@@ -39,7 +39,7 @@ public class TestOpenHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_USERS =
             "CREATE TABLE IF NOT EXISTS " + TABLE_USER + " (" +
-                    ID + " INTEGER PRIMARY KEY autoincrement," +
+                    ID + " INTEGER PRIMARY KEY," +
                     NAME + " TEXT," +
                     EMAIL + " TEXT)";
              //       ID + " INTEGER PRIMARY KEY autoincrement)";
@@ -88,13 +88,13 @@ public class TestOpenHelper extends SQLiteOpenHelper {
         db.insert("spot2", null, values);
     }
 
-    public void saveUser(SQLiteDatabase db, String name, String email){
+    public void saveUser(SQLiteDatabase db, int id, String name, String email){
         ContentValues values = new ContentValues();
-        //values.put(ID, 10);
+        values.put(ID, id);
         values.put(NAME, name);
         values.put(EMAIL, email);
 
-        Log.d("#", "userData name " + name + " email " + email);
+        Log.d("#", "userData id " + id + " name " + name + " email " + email);
 
         db.insert("user", null, values);
     }
