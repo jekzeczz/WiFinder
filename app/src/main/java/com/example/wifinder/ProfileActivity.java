@@ -24,18 +24,19 @@ public class ProfileActivity extends AppCompatActivity {
 
     void init() {
         //textViewId = findViewById(R.id.textViewId);
-        textViewUsername = findViewById(R.id.textViewUsername);
-        textViewEmail = findViewById(R.id.textViewEmail);
+        //textViewUsername = findViewById(R.id.textViewUsername);
+        //textViewEmail = findViewById(R.id.textViewEmail);
 
         //getting the current userFLAG_ACTIVITY_NEW_TASK
         User user = PrefManager.getInstance(this).getUser();
 
         //setting the values to the textviews
         //textViewId.setText(String.valueOf(user.getId()));
-        textViewUsername.setText(user.getUsername());
-        textViewEmail.setText(user.getEmail());
+        //textViewUsername.setText(user.getUsername());
+        //textViewEmail.setText(user.getEmail());
 
         //when the user presses logout button calling the logout method
+        /*
         findViewById(R.id.buttonLogout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,6 +44,6 @@ public class ProfileActivity extends AppCompatActivity {
                 PrefManager.getInstance(getApplicationContext()).logout();
                 //PrefManager.getInstance(ProfileActivity.this).logout();
             }
-        });
+        });*/
     }
 }

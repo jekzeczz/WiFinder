@@ -54,6 +54,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
                 DialogFragment newFragment = new SelectLanguageDialogFragment();
                 newFragment.show(getActivity().getSupportFragmentManager(), "Select Languages");
                 break;
+
+            case R.id.setting3:
+
+                break;
         }
     }
 }
