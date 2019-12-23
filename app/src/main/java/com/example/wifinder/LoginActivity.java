@@ -64,16 +64,16 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.spot).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadData();
+                loadSpot();
             }
         });
          */
     }
 
     /**
-     * データベースの作成
+     * データベースの作成(Sqlite)
      */
-    public void loadData() {
+    public void loadDB() {
         //DBが存在してないとき
         if (helper == null) {
             helper = new TestOpenHelper(getApplicationContext());
@@ -81,10 +81,16 @@ public class LoginActivity extends AppCompatActivity {
         //中身がないとき
         if (db == null) {
             db = helper.getReadableDatabase();
-            GetSpot gp = new GetSpot();
-            gp.execute();
         }
     }
+
+    public void loadSpot() {
+        loadDB();
+        GetSpot gp = new GetSpot();
+        gp.execute();
+    }
+
+
 
     //ログイン処理
     private void userLogin() {
@@ -149,6 +155,7 @@ public class LoginActivity extends AppCompatActivity {
                             userJson.getString("email")
                     );
 
+                    loadDB();
                     setUser.saveUser(db, user.getUsername(), user.getEmail());
 
 
