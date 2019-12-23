@@ -60,8 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
         readData();
     }
 
-    public void readData(){
-
+    public void readData() {
         helper = new TestOpenHelper(getApplicationContext());
         db = helper.getReadableDatabase();
 
