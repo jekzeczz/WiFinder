@@ -99,7 +99,7 @@ public class TestOpenHelper extends SQLiteOpenHelper {
         db.insert("user", null, values);
     }
 
-    public void saveFavo(SQLiteDatabase db, String name, int spot, int user){
+    public void saveFavo(SQLiteDatabase db, String name, String spot, int user){
         ContentValues values = new ContentValues();
         values.put(SPOT_ID, spot);
         values.put(USER_ID, user);

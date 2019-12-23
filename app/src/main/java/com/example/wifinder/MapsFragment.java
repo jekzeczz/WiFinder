@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 
 import org.json.JSONException;
@@ -123,6 +124,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 //                });
 
             }
+            mMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    // タップされたマーカーのタイトルを取得
+                    String name = marker.getTitle();
+                    return false;
+                }
+            });
+
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
