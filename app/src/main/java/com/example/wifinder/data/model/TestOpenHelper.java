@@ -22,8 +22,8 @@ public class TestOpenHelper extends SQLiteOpenHelper {
 
     private static final String EMAIL = "email";
 
-    private static final String SPOT_ID = "spotID";
-    private static final String USER_ID = "userID";
+    private static final String SPOT_ID = "spot";
+    private static final String USER_ID = "user";
 
 
 
