@@ -49,7 +49,7 @@
             android:paddingTop="8dp"
             android:paddingRight="16dp"
             android:paddingBottom="8dp"
-            android:text="setting 3" />
+            android:text="Spot Reload" />
 
         <View
             android:layout_width="match_parent"
