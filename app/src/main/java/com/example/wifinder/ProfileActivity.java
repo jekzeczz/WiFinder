@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,8 +28,9 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
         init();
+
+
     }
 
     void init() {
@@ -54,10 +56,8 @@ public class ProfileActivity extends AppCompatActivity {
                 //PrefManager.getInstance(ProfileActivity.this).logout();
             }
         });*/
-        for(int i = 0; i < users.size(); i++) {
-            users.get(i).getUsername();
-            //Log.d("#", "spotData" + n);
-        }
+        Log.d("#", "UserData " + user);
+        readData();
     }
 
     public void readData(){
@@ -88,6 +88,10 @@ public class ProfileActivity extends AppCompatActivity {
         cursor.close();
 
         //Log.d("#", "spotData" + )
+        for(int i = 0; i < users.size(); i++) {
+            users.get(i).getUsername();
+            Log.d("#", "UserData " + users.get(i).getUsername());
+        }
 
     }
 }
