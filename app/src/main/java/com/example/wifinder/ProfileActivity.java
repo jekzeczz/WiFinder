@@ -60,34 +60,5 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    public void readData(){
 
-        helper = new TestOpenHelper(getApplicationContext());
-        db = helper.getReadableDatabase();
-
-        Cursor cursor = db.query(
-                "user",
-                new String[] { "id", "name", "email"},
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-
-        cursor.moveToFirst();
-
-        for (int i = 0; i < cursor.getCount(); i++) {
-            User n = new User( cursor.getInt(0), cursor.getString(1), cursor.getString(2));
-            users.add(n);
-
-            //Log.d("#", "spotData" + n);
-            cursor.moveToNext();
-        }
-
-        cursor.close();
-
-        //Log.d("#", "spotData" + )
-
-    }
 }
