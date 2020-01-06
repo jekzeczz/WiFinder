@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -94,10 +95,28 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             return;
         }
 
+        //自宅でお気に入りテスト用データ
+        LatLng lawson = new LatLng(35.7055504, 139.7227716);
+        mMap.addMarker(new MarkerOptions().position(lawson).title("ローソン 早稲田町店"));
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                View view = getLayoutInflater().inflate(R.layout.info_window_view, null);
+                TextView title = view.findViewById(R.id.name_view);
+                title.setText(marker.getTitle());
+
+                return view;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                return null;
+            }
+        });
+
         try {
             GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.geojson, getActivity());
             layer.addLayerToMap();
-
             readData();
             Log.d("#", "spotData row" + row);
             for(int i = 0; i < row; i++) {
