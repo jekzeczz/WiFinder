@@ -1,5 +1,6 @@
 package com.example.wifinder;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,19 +15,29 @@ import android.widget.Toast;
 
 import com.example.wifinder.data.URLS;
 import com.example.wifinder.data.model.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
-    EditText editTextUsername, editTextEmail, editTextPassword;
+
+    private EditText editTextUsername, editTextEmail, editTextPassword;
+
+    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         editTextUsername = findViewById(R.id.username);
         editTextEmail = findViewById(R.id.email);
@@ -49,12 +60,12 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void signUpUser() {
-        final String username = editTextUsername.getText().toString().trim();
+        final String userName = editTextUsername.getText().toString().trim();
         final String email = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
 
         //検証
-        if (TextUtils.isEmpty(username)) {
+        if (TextUtils.isEmpty(userName)) {
             editTextUsername.setError("Please enter username");
             editTextUsername.requestFocus();
             return;
@@ -77,19 +88,48 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
+        // Create a new user
+        Map<String, Object> user = new HashMap<>();
+        user.put("name", userName);
+        user.put("email", email);
+        user.put("password", password);
+
+        // Add a new document with a generated ID
+        firebaseFirestore.collection("users")
+                .add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("########", "DocumentSnapshot added with ID: " + documentReference.getId());
+                        finish();
+                        startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("##########", "Error adding document", e);
+                        Toast.makeText(getApplicationContext(), "エラー発生", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // FIXME: firebase で会員登録ができるようになればいらないので消す
         //すべての検証をパスした場合
         //async taskを実行
-        SignUpUser suu = new SignUpUser(username,email,password);
-        suu.execute();
+//        SignUpUser suu = new SignUpUser(username, email, password);
+//        suu.execute();
     }
+
     private class SignUpUser extends AsyncTask<Void, Void, String> {
         private ProgressBar progressBar;
         private String username, email, password;
+
         SignUpUser(String username, String email, String password) {
             this.username = username;
             this.email = email;
             this.password = password;
         }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -100,11 +140,11 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.i("signup","signup : " + s);
+            Log.i("signup", "signup : " + s);
             progressBar.setVisibility(View.GONE);
             try {
                 JSONObject obj = new JSONObject(s);
-                if (!obj.getBoolean("error")){
+                if (!obj.getBoolean("error")) {
                     //Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
                     JSONObject userJson = obj.getJSONObject("user");
                     User user = new User(
@@ -115,12 +155,10 @@ public class SignUpActivity extends AppCompatActivity {
                     PrefManager.getInstance(getApplicationContext()).setUserLogin(user);
                     finish();
                     startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), "エラー発生", Toast.LENGTH_SHORT).show();
                 }
-            }
-            catch (JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
