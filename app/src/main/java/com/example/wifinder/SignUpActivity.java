@@ -7,41 +7,31 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.wifinder.data.URLS;
-import com.example.wifinder.data.model.User;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText editTextUsername, editTextEmail, editTextPassword;
-
-    private FirebaseFirestore firebaseFirestore;
+    private EditText editTextEmail, editTextPassword;
+    private ProgressBar progressBar;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        auth = FirebaseAuth.getInstance();
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
-
-        editTextUsername = findViewById(R.id.username);
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
+        progressBar = findViewById(R.id.loading);
 
         findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,16 +50,9 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void signUpUser() {
-        final String userName = editTextUsername.getText().toString().trim();
-        final String email = editTextEmail.getText().toString().trim();
-        final String password = editTextPassword.getText().toString().trim();
+        String email = editTextEmail.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
 
-        //検証
-        if (TextUtils.isEmpty(userName)) {
-            editTextUsername.setError("Please enter username");
-            editTextUsername.requestFocus();
-            return;
-        }
         if (TextUtils.isEmpty(email)) {
             editTextEmail.setError("Please enter your email");
             editTextEmail.requestFocus();
@@ -88,91 +71,24 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        // Create a new user
-        Map<String, Object> user = new HashMap<>();
-        user.put("name", userName);
-        user.put("email", email);
-        user.put("password", password);
-
-        // Add a new document with a generated ID
-        firebaseFirestore.collection("users")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        //create user
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("########", "DocumentSnapshot added with ID: " + documentReference.getId());
-                        finish();
-                        startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("##########", "Error adding document", e);
-                        Toast.makeText(getApplicationContext(), "エラー発生", Toast.LENGTH_SHORT).show();
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Toast.makeText(getApplicationContext(), "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Authentication failed." + task.getException(),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            finish();
+                        }
                     }
                 });
-
-        // FIXME: firebase で会員登録ができるようになればいらないので消す
-        //すべての検証をパスした場合
-        //async taskを実行
-//        SignUpUser suu = new SignUpUser(username, email, password);
-//        suu.execute();
-    }
-
-    private class SignUpUser extends AsyncTask<Void, Void, String> {
-        private ProgressBar progressBar;
-        private String username, email, password;
-
-        SignUpUser(String username, String email, String password) {
-            this.username = username;
-            this.email = email;
-            this.password = password;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBar = findViewById(R.id.loading);
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Log.i("signup", "signup : " + s);
-            progressBar.setVisibility(View.GONE);
-            try {
-                JSONObject obj = new JSONObject(s);
-                if (!obj.getBoolean("error")) {
-                    //Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                    JSONObject userJson = obj.getJSONObject("user");
-                    User user = new User(
-                            userJson.getInt("id"),
-                            userJson.getString("username"),
-                            userJson.getString("email")
-                    );
-                    PrefManager.getInstance(getApplicationContext()).setUserLogin(user);
-                    finish();
-                    startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-                } else {
-                    Toast.makeText(getApplicationContext(), "エラー発生", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            RequestHandler requestHandler = new RequestHandler();
-
-            HashMap<String, String> params = new HashMap<>();
-            params.put("username", username);
-            params.put("email", email);
-            params.put("password", password);
-
-            return requestHandler.sendPostRequest(URLS.URL_SIGNUP, params);
-        }
     }
 }

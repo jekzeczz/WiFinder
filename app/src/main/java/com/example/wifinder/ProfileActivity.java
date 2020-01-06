@@ -1,5 +1,6 @@
 package com.example.wifinder;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,89 +9,71 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.wifinder.data.model.TestOpenHelper;
 import com.example.wifinder.data.model.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
-
-    private TestOpenHelper helper;
-    private SQLiteDatabase db;
-    private List<User> users = new ArrayList<>();
-    //TextView textViewId, textViewUsername, textViewEmail;
-    TextView textViewUsername, textViewEmail;
+    private TextView email;
+    private Button signOut;
+    private FirebaseAuth.AuthStateListener authListener;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        init();
 
-
-    }
-
-    void init() {
-        //textViewId = findViewById(R.id.textViewId);
-        //textViewUsername = findViewById(R.id.textViewUsername);
-        //textViewEmail = findViewById(R.id.textViewEmail);
-
-        //getting the current userFLAG_ACTIVITY_NEW_TASK
-        User user = PrefManager.getInstance(this).getUser();
-
-        //setting the values to the textviews
-        //textViewId.setText(String.valueOf(user.getId()));
-        //textViewUsername.setText(user.getUsername());
-        //textViewEmail.setText(user.getEmail());
-
-        //when the user presses logout button calling the logout method
-        /*
-        findViewById(R.id.buttonLogout).setOnClickListener(new View.OnClickListener() {
+        //get firebase auth instance
+        auth = FirebaseAuth.getInstance();
+        //get current user
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        authListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onClick(View view) {
-                finish();
-                PrefManager.getInstance(getApplicationContext()).logout();
-                //PrefManager.getInstance(ProfileActivity.this).logout();
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // user auth state is changed - user is null
+                    // launch main activity
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    finish();
+                }
             }
-        });*/
-        Log.d("#", "UserData " + user);
-        readData();
+        };
+        signOut = (Button) findViewById(R.id.sign_out);
+        email = (TextView) findViewById(R.id.email);
+        email.setText(user.getEmail());
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
     }
 
-    public void readData() {
-        helper = new TestOpenHelper(getApplicationContext());
-        db = helper.getReadableDatabase();
+    //sign out method
+    public void signOut() {
+        auth.signOut();
+    }
 
-        Cursor cursor = db.query(
-                "user",
-                new String[] { "id", "name", "email"},
-                null,
-                null,
-                null,
-                null,
-                null
-        );
+    @Override
+    public void onStart() {
+        super.onStart();
+        auth.addAuthStateListener(authListener);
+    }
 
-        cursor.moveToFirst();
-
-        for (int i = 0; i < cursor.getCount(); i++) {
-            User n = new User( cursor.getInt(0), cursor.getString(1), cursor.getString(2));
-            users.add(n);
-
-            //Log.d("#", "spotData" + n);
-            cursor.moveToNext();
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (authListener != null) {
+            auth.removeAuthStateListener(authListener);
         }
-
-        cursor.close();
-
-        //Log.d("#", "spotData" + )
-        for(int i = 0; i < users.size(); i++) {
-            users.get(i).getUsername();
-            Log.d("#", "UserData " + users.get(i).getUsername());
-        }
-
     }
 }
