@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * データベースの作成(Sqlite)
      */
+    /*
     public void loadDB() {
         //DBが存在してないとき
         if (helper == null) {
@@ -80,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
         GetSpot gp = new GetSpot();
         gp.execute();
     }
-
+*/
 
 
     //ログイン処理
@@ -146,10 +147,10 @@ public class LoginActivity extends AppCompatActivity {
                             userJson.getString("email")
                     );
 
-                    loadDB();
-                    setUser.saveUser(db, user.getId(), user.getUsername(), user.getEmail());
+                    //loadDB();
+                    //setUser.saveUser(db, user.getId(), user.getUsername(), user.getEmail());
 
-                    loadSpot();
+                    //loadSpot();
 
 
                     Log.d("##", "id : " + user.getId());

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "833356748469",
+    "firebase_url": "https://wifinder-480f9.firebaseio.com",
+    "project_id": "wifinder-480f9",
+    "storage_bucket": "wifinder-480f9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:833356748469:android:0de1e73614aabce27010fc",
+        "android_client_info": {
+          "package_name": "com.example.wifinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "833356748469-j12a0k96gh09jctg0djdf6otkq9mvlp8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDksdHz8NR-GSWKozjG18Ku0-CN4Y4y2v8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "833356748469-j12a0k96gh09jctg0djdf6otkq9mvlp8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
