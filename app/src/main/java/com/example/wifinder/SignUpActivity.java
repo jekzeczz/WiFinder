@@ -70,22 +70,24 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        //create user
+        // create user
+        progressBar.setVisibility(View.VISIBLE);
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Toast.makeText(getApplicationContext(), "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Authentication failed." + task.getException(),
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
+                        if (task.isSuccessful()) {
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                             finish();
+                        } else {
+                            // TODO: 失敗したケースに合わして表示すること
+                            //  ex）すでに存在するアカウントです。パスワードは6文字以上にする必要があります。など
+                            Toast.makeText(getApplicationContext(), "Authentication failed." + task.getException(),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
