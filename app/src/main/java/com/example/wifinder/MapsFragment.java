@@ -2,10 +2,12 @@ package com.example.wifinder;
 
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -22,10 +24,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import com.example.wifinder.data.DataBaseHelper;
+import com.example.wifinder.data.SpotsAdapter;
+import com.example.wifinder.data.model.Spots;
 import com.example.wifinder.data.model.TestOpenHelper;
 import com.example.wifinder.data.model.Spot;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,6 +38,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -62,7 +68,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     private double lat;
     private double lng;
     private TestOpenHelper helper;
+    private DataBaseHelper DBHelper;
+    private SQLiteDatabase db;
     private List<Spot> spots = new ArrayList<>();
+    public List<Spots> spotsList;
     private int row;
 
     public MapsFragment() {
@@ -88,41 +97,34 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mMap = googleMap;
         UiSettings us = mMap.getUiSettings();
 
+        
+
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //Toast.makeText(getActivity(), "nop", Toast.LENGTH_SHORT).show();
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
             return;
         }
-
-        //自宅でお気に入りテスト用データ
-        LatLng lawson = new LatLng(35.7055504, 139.7227716);
-        mMap.addMarker(new MarkerOptions().position(lawson).title("ローソン 早稲田町店"));
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoWindow(Marker marker) {
-                View view = getLayoutInflater().inflate(R.layout.info_window_view, null);
-                TextView title = view.findViewById(R.id.name_view);
-                title.setText(marker.getTitle());
-
-                return view;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                return null;
-            }
-        });
-
         try {
             GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.geojson, getActivity());
             layer.addLayerToMap();
-            readData();
-            Log.d("#", "spotData row" + row);
-            for(int i = 0; i < row; i++) {
-                LatLng place = new LatLng(spots.get(i).getLatitude(), spots.get(i).getLongitude());
+            //readData();
+            initLoadDB();
+            //Log.d("#", "spotData row" + row);
+            Log.d("#", "spotData row" + spotsList);
+            //for(int i = 0; i < row; i++) {
+            for(int i = 0; i < spotsList.size(); i++) {
+                //LatLng place = new LatLng(row.get(i).getLatitude(), row.get(i).getLongitude());
+                LatLng place = new LatLng(spotsList.get(i).getLatitude(), spotsList.get(i).getLongitude());
                 //Log.d("#", "spotData latitude : longitude " + spots.get(i).getLatitude() + " : " + spots.get(i).getLongitude());
-                mMap.addMarker(new MarkerOptions().position(place).title(spots.get(i).getSpotname()));
+                //mMap.addMarker(new MarkerOptions().position(place).title(row.get(i).getName()));
+//                mMap.addMarker(new MarkerOptions().position(place).title(spotsList.get(i).getName()).title(spotsList.get(i).getAddress()));
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(place);
+                markerOptions.title(spotsList.get(i).getName());
+                markerOptions.snippet(spotsList.get(i).getAddress());
+                mMap.addMarker(markerOptions);
+
                 //Log.d("#", "spotData Name " + spots.get(i).getSpotname());
 
 
@@ -143,6 +145,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 //                });
 
             }
+
+
             mMap.setOnMarkerClickListener(new OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
@@ -155,6 +159,54 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
+
+        //自宅でお気に入りテスト用データ
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(final Marker marker) {
+                final View view = getLayoutInflater().inflate(R.layout.info_window_view, null);
+                final TextView title = view.findViewById(R.id.name_view);
+                TextView address = view.findViewById(R.id.address_view);
+                Button addButton = view.findViewById(R.id.buttonAdd);
+                Button deleteButton = view.findViewById(R.id.buttonDelete);
+                title.setText(marker.getTitle());
+                address.setText(marker.getSnippet());
+
+                addButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.e("#######","클릭클릭");
+                        if(DBHelper == null){
+                            DBHelper = new DataBaseHelper(getContext());
+                        }
+
+                        if(db == null){
+                            db = DBHelper.getWritableDatabase();
+                        }
+
+                        String name = marker.getTitle();
+                        String address = marker.getSnippet();
+
+                        insertData(db, name, address);
+                    }
+                });
+
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
+                return view;
+            }
+        });
+
 
         locationStart();
         //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, REQUEST_PERMISSION, 50, this);
@@ -297,5 +349,26 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
         // static CameraUpdate.newLatLngBounds(LatLngBounds bounds, int width, int height, int padding)
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, 0));
+    }
+
+    private void initLoadDB() {
+
+        SpotsAdapter mDbHelper = new SpotsAdapter(getActivity());
+        mDbHelper.createDatabase();
+        mDbHelper.open();
+
+        // db에 있는 값들을 model을 적용해서 넣는다.
+        spotsList = mDbHelper.getTableData();
+
+        // db 닫기
+        mDbHelper.close();
+    }
+
+    public void insertData(SQLiteDatabase db, String name, String address){
+        ContentValues values = new ContentValues();
+        values.put("name", name);
+        values.put("address", address);
+
+        db.insert("favorites", null, values);
     }
 }

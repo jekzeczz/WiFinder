@@ -14,18 +14,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        tools:text="千葉ニュータウン中央" />
+        tools:text="name" />
+    <TextView
+        android:id="@+id/address_view"
+        style="@android:style/TextAppearance.Material.Menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="address" />
 
     <Button
         android:id="@+id/buttonAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="add"/>
+        android:text="add"
+        android:clickable="true"/>
     <Button
         android:id="@+id/buttonDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="delete"/>
+        android:text="delete"
+        android:clickable="true"/>
 
 
 </LinearLayout>
