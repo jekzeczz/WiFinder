@@ -5,6 +5,7 @@ public class Spots {
     public Integer id;
     public String name;
     public String address;
+    public String ssid;
     public double latitude;
     public double longitude;
 
@@ -32,6 +33,14 @@ public class Spots {
         this.address = address;
     }
 
+    public String getSsid() {
+        return ssid;
+    }
+
+    public void setSsid(String ssid) {
+        this.ssid = ssid;
+    }
+
     public double getLatitude() {
         return latitude;
     }
@@ -47,4 +56,6 @@ public class Spots {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+
+
 }

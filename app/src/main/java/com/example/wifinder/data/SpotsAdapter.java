@@ -90,8 +90,9 @@ public class SpotsAdapter {
                     spots.setId(mCur.getInt(0));
                     spots.setName(mCur.getString(1));
                     spots.setAddress(mCur.getString(2));
-                    spots.setLatitude(mCur.getDouble(3));
-                    spots.setLongitude(mCur.getDouble(4));
+                    spots.setSsid(mCur.getString(3));
+                    spots.setLatitude(mCur.getDouble(4));
+                    spots.setLongitude(mCur.getDouble(5));
 
                     // リストに入れる
                     spotsList.add(spots);
