@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -38,20 +37,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
-
+import com.example.wifinder.dummy.defineAddressIdLanguage;
 import org.json.JSONException;
-
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -108,21 +106,40 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         try {
             GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.geojson, getActivity());
             layer.addLayerToMap();
-            //readData();
+
             initLoadDB();
-            //Log.d("#", "spotData row" + row);
             Log.d("#", "spotData row" + spotsList);
             //for(int i = 0; i < row; i++) {
             for(int i = 0; i < spotsList.size(); i++) {
-                //LatLng place = new LatLng(row.get(i).getLatitude(), row.get(i).getLongitude());
+/*
+                System.out.println(spotsList.get(i).getId(),
+                                    spotsList.get(i).getName(),
+                                        spotsList.get(i).getAddress(),
+                                            spotsList.get(i).getSsid(),
+                                                spotsList.get(i).getLatitude(),
+                                                    spotsList.get(i).getLongitude());
+*/
+
                 LatLng place = new LatLng(spotsList.get(i).getLatitude(), spotsList.get(i).getLongitude());
-                //Log.d("#", "spotData latitude : longitude " + spots.get(i).getLatitude() + " : " + spots.get(i).getLongitude());
-                //mMap.addMarker(new MarkerOptions().position(place).title(row.get(i).getName()));
-//                mMap.addMarker(new MarkerOptions().position(place).title(spotsList.get(i).getName()).title(spotsList.get(i).getAddress()));
+
+
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(place);
                 markerOptions.title(spotsList.get(i).getName());
-                markerOptions.snippet(spotsList.get(i).getAddress());
+                markerOptions.snippet(spotsList.get(i).getSsid()  + ","+ spotsList.get(i).getAddress());
+//--------------------------------------------アイコン判断------------------------------------------
+                BitmapDescriptor icon;
+                if( spotsList.get(i).getSsid().equals(defineAddressIdLanguage.s1)){
+                    icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_seven);
+                    markerOptions.icon(icon);
+                }else if(spotsList.get(i).getSsid().equals(defineAddressIdLanguage.s5)){
+                    icon = BitmapDescriptorFactory.fromResource(R.drawable.apli_2);
+                    markerOptions.icon(icon);
+                }
+
+
+
+
                 mMap.addMarker(markerOptions);
 
                 //Log.d("#", "spotData Name " + spots.get(i).getSpotname());
@@ -152,6 +169,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 public boolean onMarkerClick(Marker marker) {
                     // タップされたマーカーのタイトルを取得
                     String name = marker.getTitle();
+
                     return false;
                 }
             });
@@ -173,9 +191,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 final TextView title = view.findViewById(R.id.name_view);
                 TextView address = view.findViewById(R.id.address_view);
                 Button addButton = view.findViewById(R.id.buttonAdd);
-                Button deleteButton = view.findViewById(R.id.buttonDelete);
+                TextView ssidtest = view.findViewById(R.id.ssidtest);
+
+      //         Button deleteButton = view.findViewById(R.id.buttonDelete);
                 title.setText(marker.getTitle());
-                address.setText(marker.getSnippet());
+
+                String testaddress = marker.getSnippet();
+                String[] as = testaddress.split(",");
+                address.setText(as[1]);
+                ssidtest.setText(as[0]);
 
                 addButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -195,14 +219,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                         insertData(db, name, address);
                     }
                 });
-
+/*
                 deleteButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                     }
                 });
-
+*/
                 return view;
             }
         });
