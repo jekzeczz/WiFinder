@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     public List<Spots> spotsList;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+    private FrameLayout containerView;
+
     public MapsFragment() {
 
         // Required empty public constructor
@@ -79,6 +82,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // 親View
+        containerView = rootView.findViewById(R.id.custom_view_container);
+
         return rootView;
     }
 
@@ -87,6 +93,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mMap = googleMap;
         UiSettings us = mMap.getUiSettings();
 
+        // googleMap icon 隠す
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+
+        // permission チェック
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
@@ -97,7 +107,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             layer.addLayerToMap();
             initLoadDB();
             Log.d("#", "spotData row" + spotsList);
-            for(int i = 0; i < spotsList.size(); i++) {
+            for (int i = 0; i < spotsList.size(); i++) {
                 LatLng place = new LatLng(spotsList.get(i).getLatitude(), spotsList.get(i).getLongitude());
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(place);
@@ -128,6 +138,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             }
         });
 
+        // マーカーをクリックしたら店情報が出るように。
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Log.e("onMarkerClick ", "########## onMarkerClick");
+                if (getContext() != null) {
+                    // TODO: ビューを消す処理も入れとく必要がある containerView.removeAllViews() 的に。
+                    containerView.addView(new CustomView(getContext()));
+                } else {
+                    Log.e("onMarkerClick ", "########## context is null");
+                }
+                return false;
+            }
+        });
+        // TODO: ↑が完成したらここは消す
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
@@ -138,11 +163,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 } else {
                     // No user is signed in
                     Log.e("#######", "비로그인 유저");
-                    if(DBHelper == null){
+                    if (DBHelper == null) {
                         DBHelper = new DataBaseHelper(getContext());
                     }
 
-                    if(db == null){
+                    if (db == null) {
                         db = DBHelper.getWritableDatabase();
                     }
                     String name = marker.getTitle();
@@ -262,7 +287,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mDbHelper.close();
     }
 
-    public void insertData(SQLiteDatabase db, String name, String address){
+    public void insertData(SQLiteDatabase db, String name, String address) {
         Log.e("#######", "insertData()");
         ContentValues values = new ContentValues();
         values.put("name", name);
