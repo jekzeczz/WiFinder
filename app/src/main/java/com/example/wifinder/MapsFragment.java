@@ -7,12 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -24,37 +22,31 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wifinder.data.DataBaseHelper;
 import com.example.wifinder.data.SpotsAdapter;
 import com.example.wifinder.data.model.Spots;
-import com.example.wifinder.data.model.TestOpenHelper;
-import com.example.wifinder.data.model.Spot;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
 
 import static android.content.Context.LOCATION_SERVICE;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,12 +59,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     private double lat;
     private double lng;
-    private TestOpenHelper helper;
     private DataBaseHelper DBHelper;
     private SQLiteDatabase db;
-    private List<Spot> spots = new ArrayList<>();
     public List<Spots> spotsList;
-    private int row;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     public MapsFragment() {
 
@@ -97,10 +87,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mMap = googleMap;
         UiSettings us = mMap.getUiSettings();
 
-
-
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //Toast.makeText(getActivity(), "nop", Toast.LENGTH_SHORT).show();
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
             return;
@@ -108,54 +95,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         try {
             GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.geojson, getActivity());
             layer.addLayerToMap();
-            //readData();
             initLoadDB();
-            //Log.d("#", "spotData row" + row);
             Log.d("#", "spotData row" + spotsList);
-            //for(int i = 0; i < row; i++) {
             for(int i = 0; i < spotsList.size(); i++) {
-                //LatLng place = new LatLng(row.get(i).getLatitude(), row.get(i).getLongitude());
                 LatLng place = new LatLng(spotsList.get(i).getLatitude(), spotsList.get(i).getLongitude());
-                //Log.d("#", "spotData latitude : longitude " + spots.get(i).getLatitude() + " : " + spots.get(i).getLongitude());
-                //mMap.addMarker(new MarkerOptions().position(place).title(row.get(i).getName()));
-//                mMap.addMarker(new MarkerOptions().position(place).title(spotsList.get(i).getName()).title(spotsList.get(i).getAddress()));
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(place);
                 markerOptions.title(spotsList.get(i).getName());
                 markerOptions.snippet(spotsList.get(i).getAddress());
                 mMap.addMarker(markerOptions);
-
-                //Log.d("#", "spotData Name " + spots.get(i).getSpotname());
-
-
-
-
-                /**
-                 * タッチするとマーカー増やすウイルス
-                 */
-//                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-//                    @Override
-//                    public void onMapClick(LatLng tapLocation) {
-//                        // tapされた位置の緯度経度
-//                        LatLng place = new LatLng(tapLocation.latitude, tapLocation.longitude);
-//                        String str = String.format(Locale.US, "%f, %f", tapLocation.latitude, tapLocation.longitude);
-//                        mMap.addMarker(new MarkerOptions().position(place).title(str));
-//                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place, 14));
-//                    }
-//                });
-
             }
-
-
-            mMap.setOnMarkerClickListener(new OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    // タップされたマーカーのタイトルを取得
-                    String name = marker.getTitle();
-                    return false;
-                }
-            });
-
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
@@ -172,90 +121,40 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 final View view = getLayoutInflater().inflate(R.layout.info_window_view, null);
                 final TextView title = view.findViewById(R.id.name_view);
                 TextView address = view.findViewById(R.id.address_view);
-                Button addButton = view.findViewById(R.id.buttonAdd);
-                Button deleteButton = view.findViewById(R.id.buttonDelete);
                 title.setText(marker.getTitle());
                 address.setText(marker.getSnippet());
-
-                addButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.e("#######","클릭클릭");
-                        if(DBHelper == null){
-                            DBHelper = new DataBaseHelper(getContext());
-                        }
-
-                        if(db == null){
-                            db = DBHelper.getWritableDatabase();
-                        }
-
-                        String name = marker.getTitle();
-                        String address = marker.getSnippet();
-
-                        insertData(db, name, address);
-                    }
-                });
-
-                deleteButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
 
                 return view;
             }
         });
 
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                // 로그인 유저냐 아니냐
+                if (user != null) {
+                    // User is signed in
+                    Log.e("#######", "로그인 유저");
+                } else {
+                    // No user is signed in
+                    Log.e("#######", "비로그인 유저");
+                    if(DBHelper == null){
+                        DBHelper = new DataBaseHelper(getContext());
+                    }
+
+                    if(db == null){
+                        db = DBHelper.getWritableDatabase();
+                    }
+                    String name = marker.getTitle();
+                    String address = marker.getSnippet();
+
+                    insertData(db, name, address);
+                }
+            }
+        });
 
         locationStart();
-        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, REQUEST_PERMISSION, 50, this);
-        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, REQUEST_PERMISSION, 50, this);
-
-
-
         us.setZoomControlsEnabled(true);
-        //Toast.makeText(getActivity(), "yes!!", Toast.LENGTH_SHORT).show();
-    }
-
-    public void readData(){
-        helper = new TestOpenHelper(getActivity());
-        SQLiteDatabase db = helper.getReadableDatabase();
-        row = 0;
-
-        Cursor cursor = db.query(
-                "spot2",
-                new String[] { "id", "name", "longitude", "latitude"},
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-
-        cursor.moveToFirst();
-
-        for (int i = 0; i < cursor.getCount(); i++) {
-            Spot n = new Spot( cursor.getInt(0), cursor.getString(1), cursor.getDouble(2), cursor.getDouble(3));
-            spots.add(n);
-            row++;
-
-            //Log.d("#", "spotData" + n);
-            cursor.moveToNext();
-        }
-
-        cursor.close();
-
-        //Log.d("#", "spotData" + )
-
-    }
-
-    public void onGetArea(View view) {
-        // GeoPoint gpo = mView.getMapCenter();
-        double topLatitude = 35.8500000;
-        double bottomLatitude = 35.5300000;
-        double leftLongitude = 138.8000000;
-        double rightLongitude = 140.0000000;
     }
 
     @Override
@@ -347,7 +246,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
 
-        // static CameraUpdate.newLatLngBounds(LatLngBounds bounds, int width, int height, int padding)
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, 0));
     }
 
@@ -365,6 +263,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     }
 
     public void insertData(SQLiteDatabase db, String name, String address){
+        Log.e("#######", "insertData()");
         ContentValues values = new ContentValues();
         values.put("name", name);
         values.put("address", address);

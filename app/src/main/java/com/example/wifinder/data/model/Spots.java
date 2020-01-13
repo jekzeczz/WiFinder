@@ -9,6 +9,18 @@ public class Spots {
     public double latitude;
     public double longitude;
 
+    public Spots() {
+    }
+
+    public Spots(Integer id, String name, String address, String ssid, double latitude, double longitude) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.ssid = ssid;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public Integer getId() {
         return id;
     }
