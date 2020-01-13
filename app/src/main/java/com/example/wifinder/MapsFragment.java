@@ -151,19 +151,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             @Override
             public boolean onMarkerClick(Marker marker) {
                 // spotデータを取得できる
-                Spots spots = (Spots) marker.getTag();
-                if (spots != null) {
-                    // ex) spots.id... spots.title...
+                Spots spot = (Spots) marker.getTag();
+                if (spot != null && getContext() != null) {
+                    // TODO: ビューを消す処理も入れとく必要がある containerView.removeAllViews() 的に。
+                    CustomView customView = new CustomView(getContext());
+                    customView.setSpot(spot);
+                    containerView.addView(customView);
                 } else {
                     Toast.makeText(getContext(), "データがありません。", Toast.LENGTH_SHORT).show();
                     return false;
-                }
-
-                if (getContext() != null) {
-                    // TODO: ビューを消す処理も入れとく必要がある containerView.removeAllViews() 的に。
-                    containerView.addView(new CustomView(getContext()));
-                } else {
-                    Log.e("onMarkerClick ", "########## context is null");
                 }
                 return false;
             }
