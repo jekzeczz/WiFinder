@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 
 import org.json.JSONException;
@@ -59,8 +62,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     private double lat;
     private double lng;
+
     private DataBaseHelper DBHelper;
     private SQLiteDatabase db;
+    private DatabaseReference mDatabase;
+
     public List<Spots> spotsList;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -135,13 +141,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 if (user != null) {
                     // User is signed in
                     Log.e("#######", "로그인 유저");
+                    Log.e("#######", user.getUid());
+                    mDatabase = FirebaseDatabase.getInstance().getReference();
                 } else {
                     // No user is signed in
                     Log.e("#######", "비로그인 유저");
                     if(DBHelper == null){
                         DBHelper = new DataBaseHelper(getContext());
                     }
-
                     if(db == null){
                         db = DBHelper.getWritableDatabase();
                     }
@@ -262,6 +269,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mDbHelper.close();
     }
 
+    //로컬 DB에 insert
     public void insertData(SQLiteDatabase db, String name, String address){
         Log.e("#######", "insertData()");
         ContentValues values = new ContentValues();
@@ -270,4 +278,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
         db.insert("favorites", null, values);
     }
+
+    //Firebase DB에 insert
+    /*
+    private void writeFavorite(String userId, String name, String email) {
+        User user = new User(name, email);
+
+        mDatabase.child("users").child(userId).setValue(user);
+    }
+     */
 }
