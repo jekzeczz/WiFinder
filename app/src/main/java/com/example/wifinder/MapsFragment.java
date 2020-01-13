@@ -119,7 +119,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 markerOptions.position(place);
                 markerOptions.title(spotsList.get(i).getName());
                 markerOptions.snippet(spotsList.get(i).getAddress());
-                mMap.addMarker(markerOptions);
+                Marker marker = mMap.addMarker(markerOptions);
+                // spot データ保存
+                marker.setTag(spotsList.get(i));
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
@@ -148,7 +150,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Log.e("onMarkerClick ", "########## onMarkerClick");
+                // spotデータを取得できる
+                Spots spots = (Spots) marker.getTag();
+                if (spots != null) {
+                    // ex) spots.id... spots.title...
+                } else {
+                    Toast.makeText(getContext(), "データがありません。", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
                 if (getContext() != null) {
                     // TODO: ビューを消す処理も入れとく必要がある containerView.removeAllViews() 的に。
                     containerView.addView(new CustomView(getContext()));
@@ -295,7 +305,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     }
 
     //로컬 DB에 insert
-    public void insertData(SQLiteDatabase db, String name, String address){
+    public void insertData(SQLiteDatabase db, String name, String address) {
         Log.e("#######", "insertData()");
         ContentValues values = new ContentValues();
         values.put("name", name);
