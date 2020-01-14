@@ -13,12 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.wifinder.data.model.TestOpenHelper;
 import com.example.wifinder.data.model.User;
-
-import org.w3c.dom.Text;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsFragment extends Fragment implements View.OnClickListener{
+public class SettingsFragment extends Fragment implements View.OnClickListener {
     private TestOpenHelper helper;
     private SQLiteDatabase db;
     private List<User> users = new ArrayList<>();
@@ -42,9 +40,17 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        TextView textView1 = view.findViewById(R.id.setting1);
+
+        // ログインしている場合のみプロフィールと線を表示
+        if (FirebaseAuth.getInstance().getUid() != null) {
+            TextView profileView = view.findViewById(R.id.profile_text_view);
+            profileView.setVisibility(View.VISIBLE);
+            view.findViewById(R.id.profile_text_view_bottom_border).setVisibility(View.VISIBLE);
+            // クリックリスナー設定
+            profileView.setOnClickListener(this);
+        }
+
         TextView textView2 = view.findViewById(R.id.setting2);
-        textView1.setOnClickListener(this);
         textView2.setOnClickListener(this);
 
         return view;
@@ -55,7 +61,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
         Intent intent;
 
         switch (v.getId()) {
-            case R.id.setting1:
+            case R.id.profile_text_view:
                 intent = new Intent(getActivity(), ProfileActivity.class);
                 startActivity(intent);
                 break;
@@ -71,22 +77,21 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
 
             case R.id.setting4:
                 readData();
-                for(int i = 0; i < users.size(); i++) {
+                for (int i = 0; i < users.size(); i++) {
                     users.get(i).getUsername();
                 }
                 break;
-
         }
     }
 
-    public void readData(){
+    public void readData() {
 
         helper = new TestOpenHelper(getActivity());
         db = helper.getReadableDatabase();
 
         Cursor cursor = db.query(
                 "user",
-                new String[] { "id", "name", "email"},
+                new String[]{"id", "name", "email"},
                 null,
                 null,
                 null,
@@ -97,7 +102,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
         cursor.moveToFirst();
 
         for (int i = 0; i < cursor.getCount(); i++) {
-            User n = new User( cursor.getInt(0), cursor.getString(1), cursor.getString(2));
+            User n = new User(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
             users.add(n);
 
             //Log.d("#", "spotData" + n);
