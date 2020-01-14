@@ -11,8 +11,17 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wifinder.data.model.Favorite;
 import com.example.wifinder.data.model.Spots;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +34,11 @@ public class CustomView extends FrameLayout {
     private TextView addressView;
 
     private float ratingValue = 0.0F;
+    final private Integer FAV_YES = 1;
+    final private Integer FAV_NO = 0;
+
     private FirebaseUser user;
+    private DocumentSnapshot mLastQueriedDocument;
 
     public CustomView(@NonNull Context context) {
         super(context);
@@ -66,8 +79,20 @@ public class CustomView extends FrameLayout {
                 // TODO: ログイン/非ログインユーザーを判断し、格データベースにデータをInsert
                 if (user != null) {
                     // User is signed in
-                } else {
+                    Log.e("#######", "Login User");
+                    Log.e("#######", user.getUid());
+                    Integer spotId = spot.id;
+                    String spotName = spot.name;
+                    String spotAddress = spot.address;
+                    /*
+                    if() {
+                        createNewFavorite(spotId, spotName, spotAddress);
+                    }*/
 
+                } else {
+                    // No user is signed in
+                    Log.e("#######", "No Login User");
+                    Toast.makeText(context, "ログインしてください", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -101,6 +126,40 @@ public class CustomView extends FrameLayout {
         dialog.show();
     }
 
+    // Firebaseにお気に入りデータをInsert
+    public void createNewFavorite(Integer spotId, String spotName, String spotAddress) {
+        String email = user.getEmail();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference newFavoriteRef = db.collection("favorite").document(email)
+                .collection("spotId").document(spotId.toString());
+
+        Favorite favorite = new Favorite();
+        favorite.setEmail(email);
+        favorite.setSpotId(spotId);
+        favorite.setSpotName(spotName);
+        favorite.setSpotAddress(spotAddress);
+        favorite.setIsFavorite(FAV_YES);
+
+        newFavoriteRef.set(favorite).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getContext(), "Inserted new Favorite", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Failed. Check log.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void getFavorite(String spotId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference favCollectionRef = db.collection("favorite");
+        Query favoriteQuery = null;
+        if(mLastQueriedDocument != null) {
+            //favoriteQuery = favCollectionRef.whereEqualTo("spotId", spotId)
+        }
+    }
     public void setSpot(Spots spot) {
         this.spot = spot;
 

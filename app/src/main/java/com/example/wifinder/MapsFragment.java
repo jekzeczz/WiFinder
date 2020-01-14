@@ -38,8 +38,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 
 import org.json.JSONException;
@@ -62,8 +60,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     private DataBaseHelper DBHelper;
 
     private SQLiteDatabase db;
-
-    private DatabaseReference mDatabase;
 
     private List<Spots> spotsList;
 
@@ -170,7 +166,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                     // User is signed in
                     Log.e("#######", "Login User");
                     Log.e("#######", user.getUid());
-                    mDatabase = FirebaseDatabase.getInstance().getReference();
                 } else {
                     // No user is signed in
                     Log.e("#######", "No Login User");
