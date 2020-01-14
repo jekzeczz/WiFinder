@@ -3,6 +3,7 @@ package com.example.wifinder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -10,18 +11,21 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wifinder.data.model.Spots;
+import com.google.firebase.auth.FirebaseUser;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
-import com.example.wifinder.data.model.Spots;
-
 public class CustomView extends FrameLayout {
 
-    public Spots spot;
-    public TextView nameView;
-    public TextView addressView;
-    public float ratingValue = 0.0F;
+    private Spots spot;
+    private TextView nameView;
+    private TextView addressView;
+
+    private float ratingValue = 0.0F;
+    private FirebaseUser user;
 
     public CustomView(@NonNull Context context) {
         super(context);
@@ -53,19 +57,20 @@ public class CustomView extends FrameLayout {
                 showDialog(context);
             }
         });
-    }
 
-    public void setSpot(Spots spot) {
-        this.spot = spot;
+        // お気に入りボタン
+        Button favoriteButton = view.findViewById(R.id.favorite_button);
+        favoriteButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: ログイン/非ログインユーザーを判断し、格データベースにデータをInsert
+                if (user != null) {
+                    // User is signed in
+                } else {
 
-        nameView.setText(spot.getName());
-        addressView.setText(spot.getAddress());
-        invalidate();
-        requestLayout();
-    }
-
-    public Spots getSpot() {
-        return this.spot;
+                }
+            }
+        });
     }
 
     public void showDialog(final Context context) {
@@ -94,5 +99,26 @@ public class CustomView extends FrameLayout {
             }
         });
         dialog.show();
+    }
+
+    public void setSpot(Spots spot) {
+        this.spot = spot;
+
+        nameView.setText(spot.getName());
+        addressView.setText(spot.getAddress());
+        invalidate();
+        requestLayout();
+    }
+
+    public Spots getSpot() {
+        return this.spot;
+    }
+
+    public void setUser(FirebaseUser user) {
+        this.user = user;
+    }
+
+    public FirebaseUser getUser() {
+        return this.user;
     }
 }

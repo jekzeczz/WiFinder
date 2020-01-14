@@ -5,27 +5,24 @@ import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.example.wifinder.data.DataBaseHelper;
 import com.example.wifinder.data.SpotsAdapter;
@@ -156,6 +153,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                     // TODO: ビューを消す処理も入れとく必要がある containerView.removeAllViews() 的に。
                     CustomView customView = new CustomView(getContext());
                     customView.setSpot(spot);
+                    customView.setUser(user);
                     containerView.addView(customView);
                 } else {
                     Toast.makeText(getContext(), "データがありません。", Toast.LENGTH_SHORT).show();

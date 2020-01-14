@@ -30,5 +30,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="評価する" />
+
+        <Button
+            android:id="@+id/favorite_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="お気に入り" />
     </LinearLayout>
 </FrameLayout>
