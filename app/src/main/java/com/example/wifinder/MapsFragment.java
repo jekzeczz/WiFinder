@@ -168,15 +168,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                // 로그인 유저냐 아니냐
+                // isLoginUser?
                 if (user != null) {
                     // User is signed in
-                    Log.e("#######", "로그인 유저");
+                    Log.e("#######", "Login User");
                     Log.e("#######", user.getUid());
                     mDatabase = FirebaseDatabase.getInstance().getReference();
                 } else {
                     // No user is signed in
-                    Log.e("#######", "비로그인 유저");
+                    Log.e("#######", "No Login User");
                     if (DBHelper == null) {
                         DBHelper = new DataBaseHelper(getContext());
                     }
@@ -293,14 +293,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mDbHelper.createDatabase();
         mDbHelper.open();
 
-        // db에 있는 값들을 model을 적용해서 넣는다.
+        // DB内の値をmodelを適用し、入れる
         spotsList = mDbHelper.getTableData();
 
-        // db 닫기
+        // db close
         mDbHelper.close();
     }
 
-    //로컬 DB에 insert
+    // LOCAL DBにinsert
     public void insertData(SQLiteDatabase db, String name, String address) {
         Log.e("#######", "insertData()");
         ContentValues values = new ContentValues();
@@ -310,7 +310,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         db.insert("favorites", null, values);
     }
 
-    //Firebase DB에 insert
+    //Firebase DBにinsert
     /*
     private void writeFavorite(String userId, String name, String email) {
         User user = new User(name, email);

@@ -15,7 +15,7 @@ import java.io.OutputStream;
 public class DataBaseHelper extends SQLiteOpenHelper {
     private static String TAG = "DataBaseHelper"; //Logcatに出力するTAG名
 
-    //디바이스 장치에서 데이터베이스의 경로
+    // デバイス内でデータベースのパス
 
     // TODO : assets ディレクトリ内にある場合 ""、その他はPATHを記入
     private static String DB_PATH = "";
