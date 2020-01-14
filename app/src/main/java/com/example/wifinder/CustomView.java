@@ -14,14 +14,16 @@ import android.widget.Toast;
 import com.example.wifinder.data.model.Favorite;
 import com.example.wifinder.data.model.Spots;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,9 +38,14 @@ public class CustomView extends FrameLayout {
     private float ratingValue = 0.0F;
     final private Integer FAV_YES = 1;
     final private Integer FAV_NO = 0;
+    public Integer dbSpotId;
+    public Integer dbIsFavorite;
+
+    private Integer spotId;
+    private String spotName;
+    private String spotAddress;
 
     private FirebaseUser user;
-    private DocumentSnapshot mLastQueriedDocument;
 
     public CustomView(@NonNull Context context) {
         super(context);
@@ -76,22 +83,12 @@ public class CustomView extends FrameLayout {
         favoriteButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: ログイン/非ログインユーザーを判断し、格データベースにデータをInsert
+                // ログインしている場合
                 if (user != null) {
-                    // User is signed in
-                    Log.e("#######", "Login User");
-                    Log.e("#######", user.getUid());
-                    Integer spotId = spot.id;
-                    String spotName = spot.name;
-                    String spotAddress = spot.address;
-                    /*
-                    if() {
-                        createNewFavorite(spotId, spotName, spotAddress);
-                    }*/
-
+                    // お気に入り設定
+                    getFavorite();
                 } else {
-                    // No user is signed in
-                    Log.e("#######", "No Login User");
+                    //　ログインしていない場合
                     Toast.makeText(context, "ログインしてください", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -126,15 +123,55 @@ public class CustomView extends FrameLayout {
         dialog.show();
     }
 
-    // Firebaseにお気に入りデータをInsert
-    public void createNewFavorite(Integer spotId, String spotName, String spotAddress) {
-        String email = user.getEmail();
+    public void getFavorite() {
+        // クリックしたマーカーの情報を保存
+        spotId = spot.id;
+        spotName = spot.name;
+        spotAddress = spot.address;
+
+        // 1. Firebaseのデータベース取得
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference newFavoriteRef = db.collection("favorite").document(email)
+        // 2. ログインしているユーザーのお気に入りテーブルを取得
+        CollectionReference favCollectionRef = db.collection("favorite").document(user.getEmail()).collection("spotId");
+        // 3. spotIdにお気に入りを追加するというクエリ文を定義
+        Query query = favCollectionRef.whereEqualTo("spotId", spotId).whereEqualTo("isFavorite", FAV_YES);
+        // クエリ実行
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                // 3．のクエリが成功した場合
+                if (task.isSuccessful()) {
+                    // 4. クエリの結果を格納
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Favorite favorite = document.toObject(Favorite.class);
+                        dbSpotId = favorite.getSpotId();
+                        dbIsFavorite = favorite.getIsFavorite();
+                    }
+
+                    // 格納した結果、データがない場合はお気に入りデータを追加
+                    if (task.getResult().size() == 0 || !dbSpotId.equals(spotId)) {
+                        addFavorite(spotId, spotName, spotAddress);
+                    } else {
+                        // すでにスポットをお気に入りしていた場合
+                        Toast.makeText(getContext(), "お気に入り削除", Toast.LENGTH_SHORT).show();
+                        removeFavorite();
+                    }
+                }
+                // 3．のクエリが失敗した場合
+                else {
+                    Log.e("######", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+    public void addFavorite(Integer spotId, String spotName, String spotAddress) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference newFavoriteRef = db.collection("favorite").document(user.getEmail())
                 .collection("spotId").document(spotId.toString());
 
         Favorite favorite = new Favorite();
-        favorite.setEmail(email);
+        favorite.setEmail(user.getEmail());
         favorite.setSpotId(spotId);
         favorite.setSpotName(spotName);
         favorite.setSpotAddress(spotAddress);
@@ -144,7 +181,7 @@ public class CustomView extends FrameLayout {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(getContext(), "Inserted new Favorite", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "お気に入り追加", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Failed. Check log.", Toast.LENGTH_SHORT).show();
                 }
@@ -152,14 +189,28 @@ public class CustomView extends FrameLayout {
         });
     }
 
-    public void getFavorite(String spotId) {
+    public void removeFavorite() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference favCollectionRef = db.collection("favorite");
-        Query favoriteQuery = null;
-        if(mLastQueriedDocument != null) {
-            //favoriteQuery = favCollectionRef.whereEqualTo("spotId", spotId)
-        }
+        DocumentReference updateFavoriteRef = db.collection("favorite").document(user.getEmail())
+                .collection("spotId").document(spotId.toString());
+
+        // TODO: インターネット接続の確認処理を入れる
+
+        updateFavoriteRef.update("isFavorite", FAV_NO)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.e("####", "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("####", "Error updating document", e);
+                    }
+                });
     }
+
     public void setSpot(Spots spot) {
         this.spot = spot;
 
