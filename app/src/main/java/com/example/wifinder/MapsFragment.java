@@ -156,6 +156,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                     // TODO: ビューを消す処理も入れとく必要がある containerView.removeAllViews() 的に。
                     CustomView customView = new CustomView(getContext());
                     customView.setSpot(spot);
+                    customView.setUser(user);
                     containerView.addView(customView);
                 } else {
                     Toast.makeText(getContext(), "データがありません。", Toast.LENGTH_SHORT).show();
