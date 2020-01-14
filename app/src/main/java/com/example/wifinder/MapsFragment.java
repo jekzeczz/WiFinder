@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +34,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,41 +53,44 @@ import static android.content.Context.LOCATION_SERVICE;
  * A simple {@link Fragment} subclass.
  */
 public class MapsFragment extends Fragment implements OnMapReadyCallback, LocationListener {
+
+    private static final int REQUEST_PERMISSION = 1000;
+    private static final int MAP_DEFAULT_ZOOM_LEVEL = 15;
+    private static final int MAP_MOVE_SPEED = 500;
+
     private GoogleMap mMap;
-    private LocationManager locationManager;
-
-    static final int REQUEST_PERMISSION = 1000;
-
-    private double lat;
-    private double lng;
 
     private DataBaseHelper DBHelper;
+
     private SQLiteDatabase db;
+
     private DatabaseReference mDatabase;
 
-    public List<Spots> spotsList;
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private List<Spots> spotsList;
+
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     private FrameLayout containerView;
 
-    public MapsFragment() {
+    private ProgressBar progressBar;
 
+    public MapsFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
+        // マップ表示
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
-
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
 
         // 親View
         containerView = rootView.findViewById(R.id.custom_view_container);
-
+        progressBar = rootView.findViewById(R.id.progress);
         return rootView;
     }
 
@@ -95,9 +98,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         UiSettings us = mMap.getUiSettings();
+        us.setZoomControlsEnabled(true);
+        us.setMapToolbarEnabled(false);
 
-        // googleMap icon 隠す
-        mMap.getUiSettings().setMapToolbarEnabled(false);
+        // 最初出るマップの位置とzoomを指定
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(MAP_DEFAULT_ZOOM_LEVEL));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(35.6988277, 139.696522)));
 
         // permission チェック
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -190,7 +196,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         });
 
         locationStart();
-        us.setZoomControlsEnabled(true);
     }
 
     @Override
@@ -212,16 +217,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     @Override
     public void onLocationChanged(Location location) {
-        // 緯度
-        lat = location.getLatitude();
-        lng = location.getLongitude();
-        Log.e("#########", "緯度 Latitude:" + location.getLatitude());
-        // 経度
-        Log.e("#############", "経度 Longitude:" + location.getLongitude());
+        progressBar.setVisibility(View.GONE);
 
-        //現在位置表示
+        // 緯度
+        double lat = location.getLatitude();
+        // 経度
+        double lng = location.getLongitude();
+        Log.e("#########", "緯度 Latitude:" + lat);
+        Log.e("#############", "経度 Longitude:" + lng);
+
+        // 現在位置表示
         mMap.setMyLocationEnabled(true);
-        zoomMap(lat, lng);
+        // 現在の位置まで移動
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)), MAP_MOVE_SPEED, null);
     }
 
     @Override
@@ -241,7 +249,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     private void locationStart() {
         // LocationManager インスタンス生成
-        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Log.e("#########", "location manager Enabled");
@@ -266,25 +274,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, REQUEST_PERMISSION, 50, this);
     }
 
-    private void zoomMap(double latitude, double longitude) {
-        // 表示する東西南北の緯度経度を設定
-        double south = latitude * (1 - 0.00005);
-        double west = longitude * (1 - 0.00005);
-        double north = latitude * (1 + 0.00005);
-        double east = longitude * (1 + 0.00005);
-
-        // LatLngBounds (LatLng southwest, LatLng northeast)
-        LatLngBounds bounds = LatLngBounds.builder()
-                .include(new LatLng(south, west))
-                .include(new LatLng(north, east))
-                .build();
-
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, 0));
-    }
-
     private void initLoadDB() {
 
         SpotsAdapter mDbHelper = new SpotsAdapter(getActivity());
@@ -299,7 +288,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     }
 
     // LOCAL DBにinsert
-    public void insertData(SQLiteDatabase db, String name, String address) {
+    private void insertData(SQLiteDatabase db, String name, String address) {
         Log.e("#######", "insertData()");
         ContentValues values = new ContentValues();
         values.put("name", name);
