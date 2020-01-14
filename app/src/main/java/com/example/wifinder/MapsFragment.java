@@ -54,7 +54,6 @@ import static android.content.Context.LOCATION_SERVICE;
  */
 public class MapsFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
-    private static final int REQUEST_PERMISSION = 1000;
     private static final int MAP_DEFAULT_ZOOM_LEVEL = 15;
     private static final int MAP_MOVE_SPEED = 500;
 
@@ -105,17 +104,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mMap.moveCamera(CameraUpdateFactory.zoomTo(MAP_DEFAULT_ZOOM_LEVEL));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(35.6988277, 139.696522)));
 
-        // permission チェック
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
-            return;
-        }
         try {
             GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.geojson, getActivity());
             layer.addLayerToMap();
             initLoadDB();
-            Log.d("#", "spotData row" + spotsList);
             for (int i = 0; i < spotsList.size(); i++) {
                 LatLng place = new LatLng(spotsList.get(i).getLatitude(), spotsList.get(i).getLongitude());
                 MarkerOptions markerOptions = new MarkerOptions();
@@ -127,6 +119,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 marker.setTag(spotsList.get(i));
             }
         } catch (IOException | JSONException e) {
+            Log.e("####", "### exception! " + e);
             e.printStackTrace();
         }
 
@@ -199,26 +192,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_PERMISSION) {
-            // 使用が許可された
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("#", "checkSelfPermission true");
-
-                locationStart();
-            } else {
-                // それでも拒否された時の対応
-                Toast toast = Toast.makeText(getActivity(),
-                        "これ以上なにもできません", Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        }
-    }
-
-    @Override
     public void onLocationChanged(Location location) {
+        // 現在位置を取得できたのでProgressBarを非表示
         progressBar.setVisibility(View.GONE);
-
         // 緯度
         double lat = location.getLatitude();
         // 経度
@@ -234,48 +210,37 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
     }
 
     private void locationStart() {
-        // LocationManager インスタンス生成
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+        // 位置取得権限を確認する
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // LocationManager インスタンス生成
+            LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+            if (locationManager == null || !locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                // GPSがOFFになっているため、設定するように促す
+                Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(settingsIntent);
+                return;
+            }
 
-        if (locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Log.e("#########", "location manager Enabled");
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, HomeActivity.REQUEST_PERMISSION, 50, this);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, HomeActivity.REQUEST_PERMISSION, 50, this);
         } else {
-            // GPSを設定するように促す
-            Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(settingsIntent);
-            Log.e("############", "not gpsEnable, startActivity");
+            // 許可されてない場合
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, HomeActivity.REQUEST_PERMISSION);
         }
-
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
-
-            Log.d("############", "checkSelfPermission false");
-            return;
-        }
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, REQUEST_PERMISSION, 50, this);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, REQUEST_PERMISSION, 50, this);
     }
 
     private void initLoadDB() {
-
         SpotsAdapter mDbHelper = new SpotsAdapter(getActivity());
         mDbHelper.createDatabase();
         mDbHelper.open();
