@@ -27,6 +27,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.wifinder.data.DataBaseHelper;
 import com.example.wifinder.data.SpotsAdapter;
+import com.example.wifinder.data.model.RatingResult;
+import com.example.wifinder.data.model.Spot;
 import com.example.wifinder.data.model.Spots;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,8 +38,15 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 
 import org.json.JSONException;
@@ -150,6 +159,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                     customView.setSpot(spot);
                     customView.setUser(user);
                     containerView.addView(customView);
+
+                    getRatingSum(spot.id);
                 } else {
                     Toast.makeText(getContext(), "データがありません。", Toast.LENGTH_SHORT).show();
                     return false;
@@ -257,12 +268,30 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         db.insert("favorites", null, values);
     }
 
-    //Firebase DBにinsert
-    /*
-    private void writeFavorite(String userId, String name, String email) {
-        User user = new User(name, email);
+    private void getRatingSum(Integer spotId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference sumDocRef = db.collection("ratingSpot").document(spotId.toString());
 
-        mDatabase.child("users").child(userId).setValue(user);
+        sumDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    RatingResult ratingResult = document.toObject(RatingResult.class);
+
+                    if (document.exists() && ratingResult.getSumRating() > 0) {
+                        Log.e("#####", "DocumentSnapshot data: " + document.getData());
+//                        sumRating = ratingResult.getSumRating();
+//                        numRating = ratingResult.getNumRatings();
+//                        avgRating = sumRating / numRating;
+                    } else {
+                        Log.e("#####", "No such document");
+                    }
+                } else {
+                    Log.e("######", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
     }
-     */
 }

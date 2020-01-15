@@ -1,12 +1,12 @@
 package com.example.wifinder.data.model;
 
-public class RatingUser {
+public class Rating {
     private float rating;
 
-    public RatingUser() {
+    public Rating() {
     }
 
-    public RatingUser(float rating) {
+    public Rating(float rating) {
         this.rating = rating;
     }
 

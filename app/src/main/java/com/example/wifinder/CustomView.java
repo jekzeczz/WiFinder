@@ -12,7 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wifinder.data.model.Favorite;
-import com.example.wifinder.data.model.RatingUser;
+import com.example.wifinder.data.model.Rating;
+import com.example.wifinder.data.model.RatingResult;
 import com.example.wifinder.data.model.Spots;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,9 +24,11 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,7 +45,6 @@ public class CustomView extends FrameLayout {
     final private Integer FAV_NO = 0;
     public Integer dbSpotId;
     public Integer dbIsFavorite;
-    public float dbRating;
 
     private Integer spotId;
     private String spotName;
@@ -230,8 +232,6 @@ public class CustomView extends FrameLayout {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-//                    RatingUser rating = document.toObject(RatingUser.class);
-//                    dbRating = rating.getRating();
                     if (document.exists()) {
                         Log.e("#####", "DocumentSnapshot data: " + document.getData());
                         Toast.makeText(getContext(), "すでに評価済みです", Toast.LENGTH_SHORT).show();
@@ -244,7 +244,6 @@ public class CustomView extends FrameLayout {
                 }
             }
         });
-
     }
 
     public void addRatingSpot(float ratingValue) {
@@ -255,10 +254,10 @@ public class CustomView extends FrameLayout {
         DocumentReference addRatingDocRef = db.collection("ratingSpot").document(spotId.toString())
                 .collection("users").document(user.getEmail());
 
-        RatingUser ratingUser = new RatingUser();
-        ratingUser.setRating(ratingValue);
+        Rating rating = new Rating();
+        rating.setRating(ratingValue);
 
-        addRatingDocRef.set(ratingUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+        addRatingDocRef.set(rating).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
@@ -268,6 +267,11 @@ public class CustomView extends FrameLayout {
                 }
             }
         });
+    }
+
+    public void addRatingSum(Rating rating) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference addRatingSumDocRef = db.collection("ratingSpot").document(spotId.toString());
     }
 
     public void setSpot(Spots spot) {
