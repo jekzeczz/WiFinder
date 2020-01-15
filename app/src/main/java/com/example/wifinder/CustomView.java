@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wifinder.data.model.Favorite;
+import com.example.wifinder.data.model.RatingUser;
 import com.example.wifinder.data.model.Spots;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,6 +42,7 @@ public class CustomView extends FrameLayout {
     final private Integer FAV_NO = 0;
     public Integer dbSpotId;
     public Integer dbIsFavorite;
+    public float dbRating;
 
     private Integer spotId;
     private String spotName;
@@ -75,7 +77,7 @@ public class CustomView extends FrameLayout {
             @Override
             public void onClick(View view) {
                 // 星で評価するダイアログを出す
-                showDialog(context);
+                getRatingSpot(context);
             }
         });
 
@@ -118,6 +120,7 @@ public class CustomView extends FrameLayout {
             public void onClick(DialogInterface dialog, int which) {
                 // TODO: ratingValue をDBに保存する
                 Toast.makeText(context, ratingValue + "点", Toast.LENGTH_SHORT).show();
+                addRatingSpot(ratingValue);
                 dialog.dismiss();
             }
         });
@@ -212,7 +215,7 @@ public class CustomView extends FrameLayout {
                 });
     }
 
-    public void getRatingSpot() {
+    public void getRatingSpot(final Context context) {
         // クリックしたマーカーの情報を保存
         spotId = spot.id;
         spotName = spot.name;
@@ -221,32 +224,50 @@ public class CustomView extends FrameLayout {
         // 1. Firebaseのデータベース取得
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // 2. ratingSpotテーブルを取得
-        DocumentReference ratingDocRef = db.collection("ratingSpot").document(spotId.toString()).collection("users").document();
+        DocumentReference ratingDocRef = db.collection("ratingSpot").document(spotId.toString()).collection("users").document(user.getEmail());
         ratingDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+//                    RatingUser rating = document.toObject(RatingUser.class);
+//                    dbRating = rating.getRating();
                     if (document.exists()) {
-                        Log.d("#####", "DocumentSnapshot data: " + document.getData());
+                        Log.e("#####", "DocumentSnapshot data: " + document.getData());
+                        Toast.makeText(getContext(), "すでに評価済みです", Toast.LENGTH_SHORT).show();
                     } else {
-                        Log.d("#####", "No such document");
+                        Log.e("#####", "No such document");
+                        showDialog(context);
                     }
                 } else {
-                    Log.d("#####", "get failed with ", task.getException());
+                    Log.e("#####", "get failed with ", task.getException());
                 }
             }
         });
 
     }
 
-    public void addRatingSpot() {
+    public void addRatingSpot(float ratingValue) {
         // クリックしたマーカーの情報を保存
         spotId = spot.id;
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference ratingDocRef = db.collection("ratingSpot").document(spotId.toString())
-                .collection("users").document();
+        DocumentReference addRatingDocRef = db.collection("ratingSpot").document(spotId.toString())
+                .collection("users").document(user.getEmail());
+
+        RatingUser ratingUser = new RatingUser();
+        ratingUser.setRating(ratingValue);
+
+        addRatingDocRef.set(ratingUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getContext(), "評価追加", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Failed. Check log.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public void setSpot(Spots spot) {
