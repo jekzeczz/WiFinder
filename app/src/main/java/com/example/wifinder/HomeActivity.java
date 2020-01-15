@@ -86,13 +86,6 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
                     loadFragment(fragment);
                     return true;
 
-                case R.id.navigation_review:
-                    getSupportActionBar().show();
-                    getSupportActionBar().setTitle("Review");
-                    fragment = new TestFragment();
-                    loadFragment(fragment);
-                    return true;
-
                 case R.id.navigation_settings:
                     getSupportActionBar().show();
                     getSupportActionBar().setTitle("Settings");

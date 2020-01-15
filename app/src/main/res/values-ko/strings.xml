@@ -23,7 +23,6 @@
 
     <string name="res_map">지도</string>
     <string name="res_favorite">즐겨찾기</string>
-    <string name="res_review">리뷰</string>
     <string name="res_settings">설정</string>
     <string name="res_login">로그인</string>
     <string name="res_signUp">회원등록</string>
