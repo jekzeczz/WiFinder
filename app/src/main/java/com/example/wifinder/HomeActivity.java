@@ -79,13 +79,11 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
                     return true;
 
                 case R.id.navigation_favorite:
-                    getSupportActionBar().setTitle("Favorite");
                     fragment = new FavoriteFragment();
                     loadFragment(fragment);
                     return true;
 
                 case R.id.navigation_settings:
-                    getSupportActionBar().setTitle("Settings");
                     fragment = new SettingsFragment();
                     loadFragment(fragment);
                     return true;
