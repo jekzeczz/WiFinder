@@ -70,7 +70,6 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
             Fragment fragment;
             switch (menuItem.getItemId()) {
                 case R.id.navigation_map:
-                    getSupportActionBar().hide();
                     if (mapFragment == null) {
                         fragment = new MapsFragment();
                     } else {
@@ -80,14 +79,12 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
                     return true;
 
                 case R.id.navigation_favorite:
-                    getSupportActionBar().show();
                     getSupportActionBar().setTitle("Favorite");
                     fragment = new FavoriteFragment();
                     loadFragment(fragment);
                     return true;
 
                 case R.id.navigation_settings:
-                    getSupportActionBar().show();
                     getSupportActionBar().setTitle("Settings");
                     fragment = new SettingsFragment();
                     loadFragment(fragment);
