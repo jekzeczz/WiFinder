@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -209,6 +210,43 @@ public class CustomView extends FrameLayout {
                         Log.e("####", "Error updating document", e);
                     }
                 });
+    }
+
+    public void getRatingSpot() {
+        // クリックしたマーカーの情報を保存
+        spotId = spot.id;
+        spotName = spot.name;
+        spotAddress = spot.address;
+
+        // 1. Firebaseのデータベース取得
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // 2. ratingSpotテーブルを取得
+        DocumentReference ratingDocRef = db.collection("ratingSpot").document(spotId.toString()).collection("users").document();
+        ratingDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("#####", "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d("#####", "No such document");
+                    }
+                } else {
+                    Log.d("#####", "get failed with ", task.getException());
+                }
+            }
+        });
+
+    }
+
+    public void addRatingSpot() {
+        // クリックしたマーカーの情報を保存
+        spotId = spot.id;
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference ratingDocRef = db.collection("ratingSpot").document(spotId.toString())
+                .collection("users").document();
     }
 
     public void setSpot(Spots spot) {
