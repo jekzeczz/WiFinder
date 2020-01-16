@@ -267,11 +267,28 @@ public class CustomView extends FrameLayout {
                 }
             }
         });
+
+        addRatingSum(ratingValue);
     }
 
-    public void addRatingSum(Rating rating) {
+    public void addRatingSum(float ratingValue) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference addRatingSumDocRef = db.collection("ratingSpot").document(spotId.toString());
+
+        RatingResult ratingResult = new RatingResult();
+        ratingResult.setSumRating((int)ratingValue);
+        ratingResult.setNumRating(1);
+
+        addRatingSumDocRef.set(ratingResult).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getContext(), "評価合計追加", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Failed. Check log.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public void setSpot(Spots spot) {
