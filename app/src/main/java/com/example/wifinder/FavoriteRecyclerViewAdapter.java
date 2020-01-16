@@ -3,6 +3,7 @@ package com.example.wifinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,11 +17,11 @@ import java.util.List;
 public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRecyclerViewAdapter.ViewHolder> {
 
     private final List<Favorite> favorites;
-    private final OnFavoriteClickListener listener;
+    private final OnFavoriteClickListener containerListener;
 
     FavoriteRecyclerViewAdapter(List<Favorite> favorites, OnFavoriteClickListener listener) {
         this.favorites = favorites;
-        this.listener = listener;
+        this.containerListener = listener;
     }
 
     @NonNull
@@ -36,12 +37,18 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
         holder.favorite = favorites.get(position);
         holder.spotNameView.setText(favorites.get(position).spotName);
         holder.spotAddressView.setText(favorites.get(position).spotAddress);
-
+        holder.favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: DBからお気に入りを解除して、リストからも消す処理を書く
+                // recyclerAdapter.notifyItemRemoved(index);
+            }
+        });
         holder.containerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listener != null) {
-                    listener.onItemClicked();
+                if (containerListener != null) {
+                    containerListener.onItemClicked();
                 }
             }
         });
@@ -56,6 +63,7 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
         View containerView;
         TextView spotNameView;
         TextView spotAddressView;
+        Button favoriteButton;
         Favorite favorite;
 
         ViewHolder(View view) {
@@ -63,6 +71,7 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
             containerView = view;
             spotNameView = view.findViewById(R.id.spot_name);
             spotAddressView = view.findViewById(R.id.spot_address);
+            favoriteButton = view.findViewById(R.id.favorite_button);
         }
     }
 }

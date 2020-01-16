@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,12 +17,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnFavoriteClickListener}
- * interface.
- */
 public class FavoriteFragment extends Fragment {
 
     private FirebaseUser user;
@@ -30,7 +25,7 @@ public class FavoriteFragment extends Fragment {
 
     private OnFavoriteClickListener listener;
 
-    public FavoriteFragment(FirebaseUser user, List<Favorite> favorites) {
+    FavoriteFragment(FirebaseUser user, List<Favorite> favorites) {
         this.user = user;
         this.favorites = favorites;
     }
@@ -71,7 +66,7 @@ public class FavoriteFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof OnFavoriteClickListener) {
             listener = (OnFavoriteClickListener) context;
