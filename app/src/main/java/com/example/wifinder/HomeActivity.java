@@ -47,13 +47,11 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // 許可されてないので許可を求める
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
-            return;
         } else {
             // 許可されている場合
             initMapFragment();
+            user = FirebaseAuth.getInstance().getCurrentUser();
         }
-
-        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -140,18 +138,12 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot documentSnapshots) {
-
-                        // お気に入り画面を開く
-                        if (documentSnapshots.isEmpty()) {
-                            Log.e("#####", "onSuccess: LIST EMPTY");
-                            // TODO: お気に入りがなかった場合のレイアウト追加する
-                        } else {
+                        if (documentSnapshots != null) {
+                            // お気に入り画面を開く
                             favorites = documentSnapshots.toObjects(Favorite.class);
-                            Log.e("#####", "onSuccess: " + favorites);
+                            favoriteFragment = new FavoriteFragment(user, favorites);
+                            loadFragment(favoriteFragment);
                         }
-
-                        favoriteFragment = new FavoriteFragment(user, favorites);
-                        loadFragment(favoriteFragment);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
