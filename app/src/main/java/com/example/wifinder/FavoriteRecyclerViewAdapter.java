@@ -1,52 +1,47 @@
 package com.example.wifinder;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.wifinder.FavoriteFragment.OnListFragmentInteractionListener;
-import com.example.wifinder.dummy.DummyContent.DummyItem;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.wifinder.FavoriteFragment.OnFavoriteClickListener;
+import com.example.wifinder.data.model.Favorite;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final List<Favorite> favorites;
+    private final OnFavoriteClickListener listener;
 
-    public FavoriteRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+    FavoriteRecyclerViewAdapter(List<Favorite> favorites, OnFavoriteClickListener listener) {
+        this.favorites = favorites;
+        this.listener = listener;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_favorite, parent, false);
+                .inflate(R.layout.favorite_item_view, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        holder.favorite = favorites.get(position);
+        holder.spotNameView.setText(favorites.get(position).spotName);
+        holder.spotAddressView.setText(favorites.get(position).spotAddress);
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.containerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                if (listener != null) {
+                    listener.onItemClicked();
                 }
             }
         });
@@ -54,25 +49,20 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return favorites.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        View containerView;
+        TextView spotNameView;
+        TextView spotAddressView;
+        Favorite favorite;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
-            mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            containerView = view;
+            spotNameView = view.findViewById(R.id.spot_name);
+            spotAddressView = view.findViewById(R.id.spot_address);
         }
     }
 }
