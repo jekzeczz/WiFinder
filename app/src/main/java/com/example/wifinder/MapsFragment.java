@@ -66,10 +66,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     private GoogleMap mMap;
 
-    private DataBaseHelper DBHelper;
-
-    private SQLiteDatabase db;
-
     private List<Spots> spotsList;
 
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -77,6 +73,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     private FrameLayout containerView;
 
     private ProgressBar progressBar;
+
+    private float ratingValue = 0.0F;
+    private Integer sumRating = 0;
+    private Integer numRating = 0;
+    private float avgRating = 0.0F;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -154,43 +155,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 // spotデータを取得できる
                 Spots spot = (Spots) marker.getTag();
                 if (spot != null && getContext() != null) {
+                    getRatingSum(spot.id);
+
                     // TODO: ビューを消す処理も入れとく必要がある containerView.removeAllViews() 的に。
                     CustomView customView = new CustomView(getContext());
                     customView.setSpot(spot);
                     customView.setUser(user);
                     containerView.addView(customView);
-
-                    getRatingSum(spot.id);
                 } else {
                     Toast.makeText(getContext(), "データがありません。", Toast.LENGTH_SHORT).show();
                     return false;
                 }
                 return false;
-            }
-        });
-        // TODO: ↑が完成したらここは消す
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                // isLoginUser?
-                if (user != null) {
-                    // User is signed in
-                    Log.e("#######", "Login User");
-                    Log.e("#######", user.getUid());
-                } else {
-                    // No user is signed in
-                    Log.e("#######", "No Login User");
-                    if (DBHelper == null) {
-                        DBHelper = new DataBaseHelper(getContext());
-                    }
-                    if (db == null) {
-                        db = DBHelper.getWritableDatabase();
-                    }
-                    String name = marker.getTitle();
-                    String address = marker.getSnippet();
-
-                    insertData(db, name, address);
-                }
             }
         });
 
@@ -258,17 +234,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mDbHelper.close();
     }
 
-    // LOCAL DBにinsert
-    private void insertData(SQLiteDatabase db, String name, String address) {
-        Log.e("#######", "insertData()");
-        ContentValues values = new ContentValues();
-        values.put("name", name);
-        values.put("address", address);
-
-        db.insert("favorites", null, values);
-    }
-
-    private void getRatingSum(Integer spotId) {
+    private float getRatingSum(Integer spotId) {
+        ratingValue = 0.0F;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference sumDocRef = db.collection("ratingSpot").document(spotId.toString());
 
@@ -281,17 +248,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
                     if (document.exists() && ratingResult.getSumRating() > 0) {
                         Log.e("#####", "DocumentSnapshot data: " + document.getData());
-//                        sumRating = ratingResult.getSumRating();
-//                        numRating = ratingResult.getNumRatings();
-//                        avgRating = sumRating / numRating;
+
+                        sumRating = ratingResult.getSumRating();
+                        numRating = ratingResult.getNumRating();
+                        avgRating = sumRating / numRating;
+
+                        ratingValue = avgRating;
                     } else {
                         Log.e("#####", "No such document");
+                        ratingValue = 0;
                     }
                 } else {
                     Log.e("######", "Error getting documents: ", task.getException());
+                    ratingValue = 0;
                 }
             }
         });
-
+        return ratingValue;
     }
 }

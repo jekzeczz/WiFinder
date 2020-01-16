@@ -1,13 +1,13 @@
 package com.example.wifinder.data.model;
 
 public class RatingResult {
-    private int sumRating;
-    private int numRating;
+    private Integer sumRating;
+    private Integer numRating;
 
     public RatingResult() {
     }
 
-    public RatingResult(int sumRating, int numRating) {
+    public RatingResult(Integer sumRating, Integer numRating) {
         this.sumRating = sumRating;
         this.numRating = numRating;
     }
@@ -16,15 +16,15 @@ public class RatingResult {
         return sumRating;
     }
 
-    public void setSumRating(int sumRating) {
+    public void setSumRating(Integer sumRating) {
         this.sumRating = sumRating;
     }
 
-    public int getNumRatings() {
+    public int getNumRating() {
         return numRating;
     }
 
-    public void setNumRating(int numRating) {
+    public void setNumRating(Integer numRating) {
         this.numRating = numRating;
     }
 }
