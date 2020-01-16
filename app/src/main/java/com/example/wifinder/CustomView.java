@@ -24,11 +24,9 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.Transaction;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,6 +47,9 @@ public class CustomView extends FrameLayout {
     private Integer spotId;
     private String spotName;
     private String spotAddress;
+
+    private Integer sumRating = 0;
+    private Integer numRating = 0;
 
     private FirebaseUser user;
 
@@ -79,7 +80,13 @@ public class CustomView extends FrameLayout {
             @Override
             public void onClick(View view) {
                 // 星で評価するダイアログを出す
-                getRatingSpot(context);
+                // ログインしている場合
+                if (user != null) {
+                    getRatingSpot(context);
+                } else {
+                    //　ログインしていない場合
+                    Toast.makeText(context, "ログインしてください", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -268,16 +275,21 @@ public class CustomView extends FrameLayout {
             }
         });
 
-        addRatingSum(ratingValue);
+        getRatingSum(spotId, ratingValue);
     }
 
-    public void addRatingSum(float ratingValue) {
+    public void addRatingSum(Integer sumRating, Integer numRating, float ratingValue) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference addRatingSumDocRef = db.collection("ratingSpot").document(spotId.toString());
-
         RatingResult ratingResult = new RatingResult();
-        ratingResult.setSumRating((int)ratingValue);
-        ratingResult.setNumRating(1);
+
+        if(sumRating == 0 && numRating == 0) {
+            ratingResult.setSumRating((int)ratingValue);
+            ratingResult.setNumRating(1);
+        } else {
+            ratingResult.setSumRating(sumRating + (int)ratingValue);
+            ratingResult.setNumRating(numRating + 1);
+        }
 
         addRatingSumDocRef.set(ratingResult).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -286,6 +298,39 @@ public class CustomView extends FrameLayout {
                     Toast.makeText(getContext(), "評価合計追加", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Failed. Check log.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void getRatingSum(Integer spotId, final float ratingValue) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference sumDocRef = db.collection("ratingSpot").document(spotId.toString());
+
+        sumDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    RatingResult ratingResult = document.toObject(RatingResult.class);
+
+                    if (document.exists() && ratingResult.getSumRating() >= 0) {
+                        Log.e("#####", "DocumentSnapshot data: " + document.getData());
+
+                        sumRating = ratingResult.getSumRating();
+                        numRating = ratingResult.getNumRating();
+
+                        addRatingSum(sumRating, numRating, ratingValue);
+                    } else {
+                        Log.e("#####", "No such document");
+
+                        sumRating = 0;
+                        numRating = 0;
+
+                        addRatingSum(sumRating, numRating, ratingValue);
+                    }
+                } else {
+                    Log.e("######", "Error getting documents: ", task.getException());
                 }
             }
         });
