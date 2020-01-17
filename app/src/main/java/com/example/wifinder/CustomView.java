@@ -54,6 +54,8 @@ public class CustomView extends FrameLayout {
 
     private FirebaseUser user;
 
+    private OnUpdateViewListener onUpdateViewListener;
+
     public CustomView(@NonNull Context context) {
         super(context);
         init(context);
@@ -132,7 +134,6 @@ public class CustomView extends FrameLayout {
                 // TODO: ratingValue をDBに保存する
                 Toast.makeText(context, ratingValue + "点", Toast.LENGTH_SHORT).show();
                 addRatingSpot(ratingValue);
-                dialog.dismiss();
             }
         });
         dialog.show();
@@ -280,16 +281,16 @@ public class CustomView extends FrameLayout {
         getRatingSum(spotId, ratingValue);
     }
 
-    public void addRatingSum(Integer sumRating, Integer numRating, float ratingValue) {
+    public void addRatingSum(Integer sumRating, Integer numRating, final float ratingValue) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference addRatingSumDocRef = db.collection("ratingSpot").document(spotId.toString());
-        RatingResult ratingResult = new RatingResult();
+        final RatingResult ratingResult = new RatingResult();
 
-        if(sumRating == 0 && numRating == 0) {
-            ratingResult.setSumRating((int)ratingValue);
+        if (sumRating == 0 && numRating == 0) {
+            ratingResult.setSumRating((int) ratingValue);
             ratingResult.setNumRating(1);
         } else {
-            ratingResult.setSumRating(sumRating + (int)ratingValue);
+            ratingResult.setSumRating(sumRating + (int) ratingValue);
             ratingResult.setNumRating(numRating + 1);
         }
 
@@ -298,6 +299,10 @@ public class CustomView extends FrameLayout {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(getContext(), "評価合計追加", Toast.LENGTH_SHORT).show();
+                    if (onUpdateViewListener != null) {
+                        // 評価処理が終わったタイミングでレイアウトをアップデートさせる
+                        onUpdateViewListener.onUpdate(spot, ratingValue);
+                    }
                 } else {
                     Toast.makeText(getContext(), "Failed. Check log.", Toast.LENGTH_SHORT).show();
                 }
@@ -312,7 +317,7 @@ public class CustomView extends FrameLayout {
         sumDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()) {
+                if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     RatingResult ratingResult = document.toObject(RatingResult.class);
 
@@ -364,4 +369,13 @@ public class CustomView extends FrameLayout {
     public FirebaseUser getUser() {
         return this.user;
     }
+
+    public void setOnUpdateViewListener(OnUpdateViewListener updateViewListener) {
+        this.onUpdateViewListener = updateViewListener;
+    }
+
+    public interface OnUpdateViewListener {
+        void onUpdate(Spots spot, float avgRating);
+    }
+
 }

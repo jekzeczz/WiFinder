@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -196,7 +195,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mDbHelper.close();
     }
 
-    public void setRatingSum(final Spots spot) {
+    private void setRatingSum(final Spots spot) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference sumDocRef = db.collection("ratingSpot").document(spot.id.toString());
         sumDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -230,10 +229,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     private void addCustomView(Spots spot, float avgRating) {
         if (getContext() != null) {
             // TODO: ビューを消す処理も入れとく必要がある containerView.removeAllViews() 的に。
-            CustomView customView = new CustomView(getContext());
+            final CustomView customView = new CustomView(getContext());
             customView.setSpot(spot);
             customView.setUser(user);
             customView.setRatingBar(avgRating);
+            customView.setOnUpdateViewListener(new CustomView.OnUpdateViewListener() {
+                @Override
+                public void onUpdate(Spots spot, float avgRating) {
+                    // spot情報レイアウトを全部消して
+                    containerView.removeAllViewsInLayout();
+                    // 新しく追加する
+                    addCustomView(spot, avgRating);
+                }
+            });
             containerView.addView(customView);
         } else {
             Toast.makeText(getContext(), "データがありません。", Toast.LENGTH_SHORT).show();
