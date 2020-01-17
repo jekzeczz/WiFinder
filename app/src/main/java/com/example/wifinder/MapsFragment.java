@@ -154,13 +154,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             public boolean onMarkerClick(Marker marker) {
                 // spotデータを取得できる
                 Spots spot = (Spots) marker.getTag();
+                ratingValue = getRatingSum(spot.id);
+
                 if (spot != null && getContext() != null) {
-                    getRatingSum(spot.id);
 
                     // TODO: ビューを消す処理も入れとく必要がある containerView.removeAllViews() 的に。
                     CustomView customView = new CustomView(getContext());
                     customView.setSpot(spot);
                     customView.setUser(user);
+                    customView.setRatingBar(ratingValue);
                     containerView.addView(customView);
                 } else {
                     Toast.makeText(getContext(), "データがありません。", Toast.LENGTH_SHORT).show();
@@ -235,7 +237,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     }
 
     private float getRatingSum(Integer spotId) {
-        ratingValue = 0.0F;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference sumDocRef = db.collection("ratingSpot").document(spotId.toString());
 
@@ -251,19 +252,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
                         sumRating = ratingResult.getSumRating();
                         numRating = ratingResult.getNumRating();
-                        avgRating = sumRating / numRating;
 
-                        ratingValue = avgRating;
+                        avgRating = sumRating / numRating;
                     } else {
                         Log.e("#####", "No such document");
-                        ratingValue = 0;
+                        avgRating = 0;
                     }
                 } else {
                     Log.e("######", "Error getting documents: ", task.getException());
-                    ratingValue = 0;
+                    avgRating = 0;
                 }
             }
         });
-        return ratingValue;
+        Log.e("#####", "avgRating : " + avgRating);
+        return avgRating;
     }
 }
