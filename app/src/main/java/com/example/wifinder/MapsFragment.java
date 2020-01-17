@@ -144,7 +144,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 // spotデータを取得できる
                 Spots spot = (Spots) marker.getTag();
                 if (spot != null) {
-                    // spotの評価平均値を取得する
+                    // spotに評価平均値をセットする
                     setRatingSum(spot);
                 } else {
                     Toast.makeText(getContext(), "情報の取得に失敗しました。", Toast.LENGTH_SHORT).show();
@@ -225,7 +225,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot document = task.getResult();
                 if (task.isSuccessful() && document != null) {
-                    // 評価（Rating）値をとってくる
+                    // 平均値をセットするために、まず評価（Rating）値をとってくる
                     RatingResult ratingResult = document.toObject(RatingResult.class);
                     if (document.exists() && ratingResult.getSumRating() > 0) {
                         Log.e("#####", "DocumentSnapshot data: " + document.getData());
@@ -238,7 +238,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                         addCustomView(spot, avgRating);
                     } else {
                         // 評価がないスポットの場合ここにくる
-                        // その場合、平均を入れておいた変数は初期化する必要がある
+                        // その場合、平均を 0.0に（初期化）して表示する
                         Log.e("@@@@@@", "@@@@@@@@ 評価されてない.平均の初期化: " + task.getException());
                         // ビュー描画
                         addCustomView(spot, 0.0F);
