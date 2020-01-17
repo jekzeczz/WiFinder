@@ -37,6 +37,7 @@ public class CustomView extends FrameLayout {
     private Spots spot;
     private TextView nameView;
     private TextView addressView;
+    private RatingBar ratingBar;
 
     private float ratingValue = 0.0F;
     final private Integer FAV_YES = 1;
@@ -50,6 +51,7 @@ public class CustomView extends FrameLayout {
 
     private Integer sumRating = 0;
     private Integer numRating = 0;
+    private Integer avgRating = 0;
 
     private FirebaseUser user;
 
@@ -73,6 +75,7 @@ public class CustomView extends FrameLayout {
         View view = inflate(context, R.layout.custom_view, this);
         nameView = findViewById(R.id.name_view);
         addressView = findViewById(R.id.address_view);
+        ratingBar = findViewById(R.id.rating_bar);
 
         // TODO: 一回評価したユーザーはボタンを表示しないようにするとか？
         Button reviewButton = view.findViewById(R.id.review_button);
@@ -347,6 +350,12 @@ public class CustomView extends FrameLayout {
 
     public Spots getSpot() {
         return this.spot;
+    }
+
+    public void setRatingBar(float rating) {
+        ratingBar.setRating(rating);
+        invalidate();
+        requestLayout();
     }
 
     public void setUser(FirebaseUser user) {

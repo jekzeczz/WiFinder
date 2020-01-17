@@ -2,10 +2,8 @@ package com.example.wifinder;
 
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -25,10 +23,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.wifinder.data.DataBaseHelper;
 import com.example.wifinder.data.SpotsAdapter;
 import com.example.wifinder.data.model.RatingResult;
-import com.example.wifinder.data.model.Spot;
 import com.example.wifinder.data.model.Spots;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,11 +38,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 
 import org.json.JSONException;
@@ -73,11 +67,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     private FrameLayout containerView;
 
     private ProgressBar progressBar;
-
-    private float ratingValue = 0.0F;
-    private Integer sumRating = 0;
-    private Integer numRating = 0;
-    private float avgRating = 0.0F;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -154,17 +143,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             public boolean onMarkerClick(Marker marker) {
                 // spotデータを取得できる
                 Spots spot = (Spots) marker.getTag();
-                if (spot != null && getContext() != null) {
-                    getRatingSum(spot.id);
-
-                    // TODO: ビューを消す処理も入れとく必要がある containerView.removeAllViews() 的に。
-                    CustomView customView = new CustomView(getContext());
-                    customView.setSpot(spot);
-                    customView.setUser(user);
-                    containerView.addView(customView);
+                if (spot != null) {
+                    // spotに評価平均値をセットする
+                    setRatingSum(spot);
                 } else {
-                    Toast.makeText(getContext(), "データがありません。", Toast.LENGTH_SHORT).show();
-                    return false;
+                    Toast.makeText(getContext(), "情報の取得に失敗しました。", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }
@@ -234,36 +217,48 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mDbHelper.close();
     }
 
-    private float getRatingSum(Integer spotId) {
-        ratingValue = 0.0F;
+    private void setRatingSum(final Spots spot) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final DocumentReference sumDocRef = db.collection("ratingSpot").document(spotId.toString());
-
+        final DocumentReference sumDocRef = db.collection("ratingSpot").document(spot.id.toString());
         sumDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
+                DocumentSnapshot document = task.getResult();
+                if (task.isSuccessful() && document != null) {
+                    // 平均値をセットするために、まず評価（Rating）値をとってくる
                     RatingResult ratingResult = document.toObject(RatingResult.class);
-
                     if (document.exists() && ratingResult.getSumRating() > 0) {
                         Log.e("#####", "DocumentSnapshot data: " + document.getData());
-
-                        sumRating = ratingResult.getSumRating();
-                        numRating = ratingResult.getNumRating();
-                        avgRating = sumRating / numRating;
-
-                        ratingValue = avgRating;
+                        // 平均を計算
+                        int sumRating = ratingResult.getSumRating();
+                        int numRating = ratingResult.getNumRating();
+                        float avgRating = sumRating / numRating;
+                        Log.e("@@@@@@", "@@@@@@@@ 評価されている平均: " + avgRating);
+                        // ビュー描画
+                        addCustomView(spot, avgRating);
                     } else {
-                        Log.e("#####", "No such document");
-                        ratingValue = 0;
+                        // 評価がないスポットの場合ここにくる
+                        // その場合、平均を 0.0に（初期化）して表示する
+                        Log.e("@@@@@@", "@@@@@@@@ 評価されてない.平均の初期化: " + task.getException());
+                        // ビュー描画
+                        addCustomView(spot, 0.0F);
                     }
-                } else {
-                    Log.e("######", "Error getting documents: ", task.getException());
-                    ratingValue = 0;
                 }
             }
         });
-        return ratingValue;
     }
+
+    private void addCustomView(Spots spot, float avgRating) {
+        if (getContext() != null) {
+            // TODO: ビューを消す処理も入れとく必要がある containerView.removeAllViews() 的に。
+            CustomView customView = new CustomView(getContext());
+            customView.setSpot(spot);
+            customView.setUser(user);
+            customView.setRatingBar(avgRating);
+            containerView.addView(customView);
+        } else {
+            Toast.makeText(getContext(), "データがありません。", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
