@@ -107,8 +107,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 LatLng place = new LatLng(spotsList.get(i).getLatitude(), spotsList.get(i).getLongitude());
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(place);
-                markerOptions.title(spotsList.get(i).getName());
-                markerOptions.snippet(spotsList.get(i).getAddress());
                 Marker marker = mMap.addMarker(markerOptions);
                 // spot データ保存
                 marker.setTag(spotsList.get(i));
@@ -117,25 +115,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             Log.e("####", "### exception! " + e);
             e.printStackTrace();
         }
-
-        //自宅でお気に入りテスト用データ
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoWindow(Marker marker) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(final Marker marker) {
-                final View view = getLayoutInflater().inflate(R.layout.info_window_view, null);
-                final TextView title = view.findViewById(R.id.name_view);
-                TextView address = view.findViewById(R.id.address_view);
-                title.setText(marker.getTitle());
-                address.setText(marker.getSnippet());
-
-                return view;
-            }
-        });
 
         // マーカーをクリックしたら店情報が出るように。
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -217,7 +196,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mDbHelper.close();
     }
 
-    private void setRatingSum(final Spots spot) {
+    public void setRatingSum(final Spots spot) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference sumDocRef = db.collection("ratingSpot").document(spot.id.toString());
         sumDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
