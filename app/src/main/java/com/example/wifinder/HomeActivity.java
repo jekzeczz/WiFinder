@@ -49,15 +49,16 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
         } else {
             // 許可されている場合
-            initMapFragment();
             user = FirebaseAuth.getInstance().getCurrentUser();
+            initMapFragment();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_PERMISSION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // 許可されている
+            // 許可された
+            user = FirebaseAuth.getInstance().getCurrentUser();
             initMapFragment();
         } else {
             // 拒否された場合アプリ終了
@@ -116,7 +117,7 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
     private void checkLogin() {
         // 未ログイン
         if (user == null) {
-            favoriteFragment = new FavoriteFragment(user, favorites);
+            favoriteFragment = new FavoriteFragment(null, favorites);
             loadFragment(favoriteFragment);
         } else {
             // お気に入り取得
