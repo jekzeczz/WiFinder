@@ -353,7 +353,7 @@ public class CustomView extends FrameLayout {
     }
 
     public void setRatingBar(float rating) {
-        ratingBar.setNumStars((int)rating);
+        ratingBar.setRating(rating);
         invalidate();
         requestLayout();
     }
