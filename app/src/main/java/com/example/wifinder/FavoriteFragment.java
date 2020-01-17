@@ -2,6 +2,7 @@ package com.example.wifinder;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.wifinder.data.model.Favorite;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -24,6 +29,17 @@ public class FavoriteFragment extends Fragment {
     private List<Favorite> favorites;
 
     private OnFavoriteClickListener listener;
+
+    private FavoriteRecyclerViewAdapter adapter;
+
+    // お気に入り解除の時のコールバック
+    private FavoriteRecyclerViewAdapter.OnFavoriteDeleteClickListener deleteClickListener = new FavoriteRecyclerViewAdapter.OnFavoriteDeleteClickListener() {
+        @Override
+        public void onDeleteClicked(int position) {
+            // お気に入りデータから消す
+            removeFavorite(favorites.get(position).spotId.toString(), position);
+        }
+    };
 
     FavoriteFragment(FirebaseUser user, List<Favorite> favorites) {
         this.user = user;
@@ -59,10 +75,34 @@ public class FavoriteFragment extends Fragment {
                 // 区切り線追加
                 recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
                 // データセット
-                recyclerView.setAdapter(new FavoriteRecyclerViewAdapter(favorites, listener));
+                adapter = new FavoriteRecyclerViewAdapter(favorites, listener, deleteClickListener);
+                recyclerView.setAdapter(adapter);
             }
             return view;
         }
+    }
+
+    private void removeFavorite(final String spotId, final int position) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference updateFavoriteRef = db.collection("favorite").document(user.getEmail())
+                .collection("spotId").document(spotId);
+        // TODO: インターネット接続の確認処理を入れる
+        updateFavoriteRef.update("isFavorite", 0)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // リストから行を削除
+                        favorites.remove(position);
+                        adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeChanged(position, favorites.size());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("####", "Error updating document", e);
+                    }
+                });
     }
 
     @Override

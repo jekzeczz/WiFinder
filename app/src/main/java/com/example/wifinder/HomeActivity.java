@@ -135,6 +135,7 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("favorite").document(user.getEmail())
                 .collection("spotId")
+                .whereEqualTo("isFavorite", 1) // お気に入りされているデータで絞る
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override

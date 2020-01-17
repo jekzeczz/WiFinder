@@ -11,6 +11,10 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+
 import com.example.wifinder.data.model.Favorite;
 import com.example.wifinder.data.model.Rating;
 import com.example.wifinder.data.model.RatingResult;
@@ -27,10 +31,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 
 public class CustomView extends FrameLayout {
 
@@ -51,7 +51,6 @@ public class CustomView extends FrameLayout {
 
     private Integer sumRating = 0;
     private Integer numRating = 0;
-    private Integer avgRating = 0;
 
     private FirebaseUser user;
 

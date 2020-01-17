@@ -18,10 +18,12 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
 
     private final List<Favorite> favorites;
     private final OnFavoriteClickListener containerListener;
+    private final OnFavoriteDeleteClickListener deleteClickListener;
 
-    FavoriteRecyclerViewAdapter(List<Favorite> favorites, OnFavoriteClickListener listener) {
+    FavoriteRecyclerViewAdapter(List<Favorite> favorites, OnFavoriteClickListener listener, OnFavoriteDeleteClickListener deleteClickListener) {
         this.favorites = favorites;
         this.containerListener = listener;
+        this.deleteClickListener = deleteClickListener;
     }
 
     @NonNull
@@ -33,15 +35,16 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         holder.favorite = favorites.get(position);
         holder.spotNameView.setText(favorites.get(position).spotName);
         holder.spotAddressView.setText(favorites.get(position).spotAddress);
         holder.favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: DBからお気に入りを解除して、リストからも消す処理を書く
-                // recyclerAdapter.notifyItemRemoved(index);
+                if (deleteClickListener != null) {
+                    deleteClickListener.onDeleteClicked(position);
+                }
             }
         });
         holder.containerView.setOnClickListener(new View.OnClickListener() {
@@ -73,5 +76,9 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
             spotAddressView = view.findViewById(R.id.spot_address);
             favoriteButton = view.findViewById(R.id.favorite_button);
         }
+    }
+
+    public interface OnFavoriteDeleteClickListener {
+        void onDeleteClicked(int position);
     }
 }
