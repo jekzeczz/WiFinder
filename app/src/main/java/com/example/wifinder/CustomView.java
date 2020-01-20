@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -95,7 +96,7 @@ public class CustomView extends FrameLayout {
         });
 
         // お気に入りボタン
-        Button favoriteButton = view.findViewById(R.id.favorite_button);
+        ImageButton favoriteButton = view.findViewById(R.id.favorite_button);
         favoriteButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,7 +134,11 @@ public class CustomView extends FrameLayout {
             public void onClick(DialogInterface dialog, int which) {
                 // TODO: ratingValue をDBに保存する
                 Toast.makeText(context, ratingValue + "点", Toast.LENGTH_SHORT).show();
-                addRatingSpot(ratingValue);
+                if (ratingValue != 0) {
+                    addRatingSpot(ratingValue);
+                } else {
+                    Toast.makeText(context, "1点以上入れて下さい", Toast.LENGTH_LONG).show();
+                }
             }
         });
         dialog.show();

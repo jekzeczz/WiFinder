@@ -2,8 +2,6 @@ package com.example.wifinder;
 
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
@@ -14,21 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.wifinder.data.model.TestOpenHelper;
-import com.example.wifinder.data.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class SettingsFragment extends Fragment implements View.OnClickListener {
-    private TestOpenHelper helper;
-    private SQLiteDatabase db;
-    private List<User> users = new ArrayList<>();
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -76,42 +67,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.setting4:
-                readData();
-                for (int i = 0; i < users.size(); i++) {
-                    users.get(i).getUsername();
-                }
                 break;
         }
-    }
-
-    public void readData() {
-
-        helper = new TestOpenHelper(getActivity());
-        db = helper.getReadableDatabase();
-
-        Cursor cursor = db.query(
-                "user",
-                new String[]{"id", "name", "email"},
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-
-        cursor.moveToFirst();
-
-        for (int i = 0; i < cursor.getCount(); i++) {
-            User n = new User(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
-            users.add(n);
-
-            //Log.d("#", "spotData" + n);
-            cursor.moveToNext();
-        }
-
-        cursor.close();
-
-        //Log.d("#", "spotData" + )
-
     }
 }
