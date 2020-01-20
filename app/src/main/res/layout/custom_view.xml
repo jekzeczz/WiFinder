@@ -39,12 +39,13 @@
             app:layout_constraintStart_toStartOf="parent"
             android:text="評価する" />
 
-        <Button
+        <ImageButton
             android:id="@+id/favorite_button"
+            android:src="@drawable/ic_favorite_border_black_24dp"
+            android:background="FFFFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/review_button"
-            app:layout_constraintTop_toTopOf="@id/review_button"
-            android:text="お気に入り" />
+            app:layout_constraintTop_toTopOf="@id/review_button"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
