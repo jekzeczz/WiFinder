@@ -270,7 +270,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         }
     }
 
-
     private void getLastLocation() {
         // 最新の位置情報を取得
         fusedLocationClient.getLastLocation()
