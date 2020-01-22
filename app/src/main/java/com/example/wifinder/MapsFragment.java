@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -25,6 +26,8 @@ import androidx.fragment.app.Fragment;
 import com.example.wifinder.data.SpotsAdapter;
 import com.example.wifinder.data.model.RatingResult;
 import com.example.wifinder.data.model.Spots;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -34,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,6 +61,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     private static final int MAP_DEFAULT_ZOOM_LEVEL = 15;
     private static final int MAP_MOVE_SPEED = 500;
 
+    private FusedLocationProviderClient fusedLocationClient;
+
+    private Location currentLocation;
+
     private GoogleMap mMap;
 
     private List<Spots> spotsList;
@@ -69,6 +77,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     public MapsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        // 最新位置取得
+        getLastLocation();
     }
 
     @Override
@@ -96,7 +112,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
         // 最初出るマップの位置とzoomを指定
         mMap.moveCamera(CameraUpdateFactory.zoomTo(MAP_DEFAULT_ZOOM_LEVEL));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(35.6988277, 139.696522)));
+        if (currentLocation == null) {
+            // デフォルト値を日本電子専門学校にする
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(35.6988277, 139.696522)));
+        } else {
+            // デバイスの位置情報があった場合はそれをデフォルト値にする
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
+        }
 
         try {
             GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.geojson, getActivity());
@@ -246,6 +268,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         } else {
             Toast.makeText(getContext(), "データがありません。", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    private void getLastLocation() {
+        // 最新の位置情報を取得
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        /*　以下の場合は location が　null になる
+                        1. デバイスの設定で位置情報がオフになっている
+                        2. 新しいデバイスまたは工場出荷時の設定に戻されたデバイス
+                        3. デバイス上の Google Play 開発者サービスが再起動され、サービスの再起動後に位置情報を取得していなかった
+                         */
+                        currentLocation = location;
+                    }
+                });
     }
 
 }

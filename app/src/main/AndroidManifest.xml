@@ -20,7 +20,9 @@
 
         <activity
             android:name=".MainActivity"
-            android:configChanges="locale"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,15 +33,32 @@
 
         <activity
             android:name=".ProfileActivity"
-            android:label="My Profile" />
+            android:configChanges="orientation"
+            android:exported="false"
+            android:label="My Profile"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".HomeActivity"
+            android:configChanges="orientation"
+            android:exported="false"
             android:label="Home"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <activity
             android:name=".SignUpActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:name=".LoginActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <!--
@@ -53,11 +72,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
     </application>
 
