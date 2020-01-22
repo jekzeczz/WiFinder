@@ -286,4 +286,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 });
     }
 
+    public void onSpotLocation(int spotId) {
+        for (int i = 0; i < spotsList.size(); i++) {
+            if(spotId == spotsList.get(i).getId()) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(spotsList.get(i).getLatitude(), spotsList.get(i).getLongitude())));
+            } else {
+            }
+        }
+    }
+
 }

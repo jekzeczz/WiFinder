@@ -163,6 +163,9 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
         fragmentManager.beginTransaction().remove(favoriteFragment).commit();
         fragmentManager.beginTransaction().add(mapFragment, "").commit();
 
+        MapsFragment mapsFragment = new MapsFragment();
+        mapsFragment.onSpotLocation(spotId);
+
         Toast.makeText(this, "TODO スポットに遷移 : " + spotId, Toast.LENGTH_SHORT).show();
     }
 }
