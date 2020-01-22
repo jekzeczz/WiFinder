@@ -158,7 +158,11 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
     }
 
     @Override
-    public void onItemClicked() {
-        Toast.makeText(this, "TODO スポットに遷移", Toast.LENGTH_SHORT).show();
+    public void onItemClicked(int spotId) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().remove(favoriteFragment).commit();
+        fragmentManager.beginTransaction().add(mapFragment, "").commit();
+
+        Toast.makeText(this, "TODO スポットに遷移 : " + spotId, Toast.LENGTH_SHORT).show();
     }
 }

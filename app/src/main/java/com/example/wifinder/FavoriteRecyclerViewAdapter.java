@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.wifinder.FavoriteFragment.OnFavoriteClickListener;
@@ -51,7 +52,7 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
             @Override
             public void onClick(View v) {
                 if (containerListener != null) {
-                    containerListener.onItemClicked();
+                    containerListener.onItemClicked(favorites.get(position).spotId);
                 }
             }
         });
