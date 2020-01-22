@@ -159,13 +159,13 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
 
     @Override
     public void onItemClicked(int spotId) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().remove(favoriteFragment).commit();
-        fragmentManager.beginTransaction().add(mapFragment, "").commit();
-
-        MapsFragment mapsFragment = new MapsFragment();
-        mapsFragment.onSpotLocation(spotId);
-
-        Toast.makeText(this, "TODO スポットに遷移 : " + spotId, Toast.LENGTH_SHORT).show();
+        // お気に入りリストからの遷移になるので、区別できるように Key, Value をセット
+        MapsFragment mapFragment = new MapsFragment();
+        Bundle bundle = new Bundle();
+        // Key, Valueセット
+        bundle.putBoolean("is_clicked_favorite", true);
+        bundle.putInt("clicked_favorite_id", spotId);
+        mapFragment.setArguments(bundle);
+        loadFragment(mapFragment);
     }
 }

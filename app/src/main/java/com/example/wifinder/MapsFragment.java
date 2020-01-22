@@ -77,6 +77,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     private ProgressBar progressBar;
 
+    // お気に入りリストからの遷移の場合は true. その他は false
+    private boolean isClickedFavoriteItem;
+
+    // お気に入りリストから選んだ spotId
+    private Integer favoriteSpotId;
+
     public MapsFragment() {
         // Required empty public constructor
     }
@@ -84,6 +90,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // お気に入りリストからの遷移の場合、渡された値を入れておく
+        if (getArguments() != null) {
+            isClickedFavoriteItem = getArguments().getBoolean("is_clicked_favorite", false);
+            favoriteSpotId = getArguments().getInt("clicked_favorite_id", 0);
+        }
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         // 最新位置取得
         getLastLocation();
@@ -117,15 +129,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         float lat = sharedPreferences.getFloat("lat", (float) 35.6988277);
         float lng = sharedPreferences.getFloat("lng", (float) 139.696522);
 
-        // 最初出るマップの位置とzoomを指定
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(MAP_DEFAULT_ZOOM_LEVEL));
-        if (currentLocation == null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
-        } else {
-            // デバイスの位置情報があった場合はそれをデフォルト値にする
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
-        }
-
         try {
             GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.geojson, getActivity());
             layer.addLayerToMap();
@@ -141,6 +144,37 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         } catch (IOException | JSONException e) {
             Log.e("####", "### exception! " + e);
             e.printStackTrace();
+        }
+
+        // 最初出るマップのzoomを指定
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(MAP_DEFAULT_ZOOM_LEVEL));
+        // お気に入りリストからの遷移の場合
+        if (isClickedFavoriteItem) {
+            // お気に入りスポットを取得してくる間に表示する座標
+            if (currentLocation == null) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
+            } else {
+                // デバイスの位置情報があった場合はそれをデフォルト値にする
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
+            }
+
+            // お気に入りスポットを検索してスポット情報を表示させる
+            for (int i = 0; i < spotsList.size(); i++) {
+                // 全てのスポットリストからお気に入りスポットと一致したスポットデータを取得(=お気に入りしたスポットである)
+                if (spotsList.get(i).id.equals(favoriteSpotId)) {
+                    LatLng favoriteItemLatLng = new LatLng(spotsList.get(i).getLatitude(), spotsList.get(i).getLongitude());
+                    // マップ移動させる
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(favoriteItemLatLng));
+                    // spot データ
+                    Spots favoriteSpot = spotsList.get(i);
+                    setRatingSum(favoriteSpot);
+                }
+            }
+        } else if (currentLocation == null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
+        } else {
+            // デバイスの位置情報があった場合はそれをデフォルト値にする
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
         }
 
         // マーカーをクリックしたら店情報が出るように。
@@ -182,8 +216,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
         // 現在位置表示
         mMap.setMyLocationEnabled(true);
-        // 現在の位置まで移動
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)), MAP_MOVE_SPEED, null);
+        // お気に入りリストからの遷移ではない場合のみ現在の位置まで移動
+        if (!isClickedFavoriteItem) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)), MAP_MOVE_SPEED, null);
+        }
     }
 
     @Override
@@ -298,14 +334,4 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                     }
                 });
     }
-
-    public void onSpotLocation(int spotId) {
-        for (int i = 0; i < spotsList.size(); i++) {
-            if(spotId == spotsList.get(i).getId()) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(spotsList.get(i).getLatitude(), spotsList.get(i).getLongitude())));
-            } else {
-            }
-        }
-    }
-
 }
