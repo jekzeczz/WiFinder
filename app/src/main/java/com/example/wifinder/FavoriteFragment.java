@@ -123,6 +123,6 @@ public class FavoriteFragment extends Fragment {
     }
 
     public interface OnFavoriteClickListener {
-        void onItemClicked();
+        void onItemClicked(int spotId);
     }
 }
