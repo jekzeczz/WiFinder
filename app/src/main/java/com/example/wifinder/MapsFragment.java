@@ -2,7 +2,9 @@ package com.example.wifinder;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -110,11 +112,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         us.setZoomControlsEnabled(true);
         us.setMapToolbarEnabled(false);
 
+        // 保存されてる位置を持ってくる。ない場合、デフォルト位置は日本電子専門学校にする
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("shared_preferences_location", Context.MODE_PRIVATE);
+        float lat = sharedPreferences.getFloat("lat", (float) 35.6988277);
+        float lng = sharedPreferences.getFloat("lng", (float) 139.696522);
+
         // 最初出るマップの位置とzoomを指定
         mMap.moveCamera(CameraUpdateFactory.zoomTo(MAP_DEFAULT_ZOOM_LEVEL));
         if (currentLocation == null) {
-            // デフォルト値を日本電子専門学校にする
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(35.6988277, 139.696522)));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
         } else {
             // デバイスの位置情報があった場合はそれをデフォルト値にする
             mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
@@ -166,6 +172,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         double lng = location.getLongitude();
         Log.e("#########", "緯度 Latitude:" + lat);
         Log.e("#############", "経度 Longitude:" + lng);
+
+        // 最後に取得した座標を保存しておく（アプリ起動時にマップで使うため）
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("shared_preferences_location", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat("lat", (float) lat);
+        editor.putFloat("lng", (float) lng);
+        editor.apply();
 
         // 現在位置表示
         mMap.setMyLocationEnabled(true);
