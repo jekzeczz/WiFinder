@@ -2,6 +2,7 @@ package com.example.wifinder;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -96,9 +97,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             favoriteSpotId = getArguments().getInt("clicked_favorite_id", 0);
         }
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-        // 最新位置取得
-        getLastLocation();
+        if (getActivity() != null) {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+            // 最新位置取得
+            getLastLocation(getActivity());
+        }
     }
 
     @Override
@@ -208,11 +211,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         Log.e("#############", "経度 Longitude:" + lng);
 
         // 最後に取得した座標を保存しておく（アプリ起動時にマップで使うため）
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("shared_preferences_location", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putFloat("lat", (float) lat);
-        editor.putFloat("lng", (float) lng);
-        editor.apply();
+        if (getContext() != null) {
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("shared_preferences_location", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putFloat("lat", (float) lat);
+            editor.putFloat("lng", (float) lng);
+            editor.apply();
+        }
 
         // 現在位置表示
         mMap.setMyLocationEnabled(true);
@@ -236,9 +241,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     private void locationStart() {
         // 位置取得権限を確認する
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (getContext() != null &&
+                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             // LocationManager インスタンス生成
-            LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+            LocationManager locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
             if (locationManager == null || !locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 // GPSがOFFになっているため、設定するように促す
                 Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -250,7 +256,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, HomeActivity.REQUEST_PERMISSION, 50, this);
         } else {
             // 許可されてない場合
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, HomeActivity.REQUEST_PERMISSION);
+            if (getActivity() != null)
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, HomeActivity.REQUEST_PERMISSION);
         }
     }
 
@@ -314,15 +321,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 }
             });
             containerView.addView(customView);
-        } else {
-            Toast.makeText(getContext(), "データがありません。", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void getLastLocation() {
+    private void getLastLocation(Activity activity) {
         // 最新の位置情報を取得
         fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                .addOnSuccessListener(activity, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
                         /*　以下の場合は location が　null になる
