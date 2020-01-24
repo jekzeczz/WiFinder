@@ -64,6 +64,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     private static final int MAP_DEFAULT_ZOOM_LEVEL = 15;
     private static final int MAP_MOVE_SPEED = 500;
 
+    private static final String SHARED_PREFERENCES_LOCATION = "shared_preferences_location";
+    private static final String LOCATION_KEY_LAT = "lat";
+    private static final String LOCATION_KEY_LNG = "lng";
+
     private FusedLocationProviderClient fusedLocationClient;
 
     private Location currentLocation;
@@ -128,9 +132,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         us.setMapToolbarEnabled(false);
 
         // 保存されてる位置を持ってくる。ない場合、デフォルト位置は日本電子専門学校にする
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("shared_preferences_location", Context.MODE_PRIVATE);
-        float lat = sharedPreferences.getFloat("lat", (float) 35.6988277);
-        float lng = sharedPreferences.getFloat("lng", (float) 139.696522);
+        float lat = 35.6988277F;
+        float lng = 139.696522F;
+        if (getContext() != null) {
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_LOCATION, Context.MODE_PRIVATE);
+            lat = sharedPreferences.getFloat(LOCATION_KEY_LAT, lat);
+            lng = sharedPreferences.getFloat(LOCATION_KEY_LNG, lng);
+        }
 
         try {
             GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.geojson, getActivity());
@@ -212,10 +220,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
         // 最後に取得した座標を保存しておく（アプリ起動時にマップで使うため）
         if (getContext() != null) {
-            SharedPreferences sharedPreferences = getContext().getSharedPreferences("shared_preferences_location", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_LOCATION, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putFloat("lat", (float) lat);
-            editor.putFloat("lng", (float) lng);
+            editor.putFloat(LOCATION_KEY_LAT, (float) lat);
+            editor.putFloat(LOCATION_KEY_LNG, (float) lng);
             editor.apply();
         }
 
