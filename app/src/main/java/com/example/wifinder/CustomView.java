@@ -128,7 +128,7 @@ public class CustomView extends FrameLayout {
             }
         });
 
-        // 評価するボタンを押した時
+        // 評価するボタンを押した時3333333
         dialog.setPositiveButton("評価する", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // TODO: ratingValue をDBに保存する
