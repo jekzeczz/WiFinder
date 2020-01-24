@@ -13,7 +13,8 @@
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textSize="24sp"/>
+        android:textSize="24sp"
+        tools:text="aaa123@google.com"/>
 
     <Button
         android:id="@+id/sign_out"

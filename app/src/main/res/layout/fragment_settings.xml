@@ -20,83 +20,106 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/profile_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:paddingLeft="16dp"
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
-                android:paddingBottom="12dp"
-                android:text="@string/res_profile"
-                android:textSize="16dp"
-                android:visibility="gone"
-                tools:visibility="visible" />
+                android:text="Language"
+                android:textColor="@color/blackTextColor"
+                android:textSize="14sp" />
 
-            <View
-                android:id="@+id/profile_text_view_bottom_border"
+            <TextView
+                android:id="@+id/set_language_text_view"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+                android:text="Set Language"
+                android:textColor="@color/blackTextColor"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/set_language_description_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingBottom="12dp"
+                android:text="You can change the language of the application"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+                android:text="Account"
+                android:textColor="@color/blackTextColor"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/set_account_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingTop="12dp"
+                android:paddingRight="16dp"
+                android:text="Set Account"
+                android:textColor="@color/blackTextColor"
+                android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
             <TextView
-                android:id="@+id/setting2"
+                android:id="@+id/set_account_description_view"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:paddingLeft="16dp"
-                android:paddingTop="12dp"
-                android:paddingRight="16dp"
                 android:paddingBottom="12dp"
-                android:text="@string/res_languages"
-                android:textSize="16dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
+                android:text="You can change the e-mail and password"
+                android:textSize="12sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/login_text_view"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:paddingLeft="16dp"
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
-                android:paddingBottom="12dp"
                 android:text="Login"
-                android:textSize="16dp"
+                android:textColor="@color/blackTextColor"
+                android:textSize="16sp"
                 android:visibility="gone"
-                tools:visibility="visible"/>
+                tools:visibility="visible" />
 
-            <View
-                android:id="@+id/login_text_view_bottom_border"
+            <TextView
+                android:id="@+id/login_description_view"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingBottom="12dp"
+                android:text="Do you have an account? Please Login"
+                android:textSize="12sp"
                 android:visibility="gone"
-                tools:visibility="visible"/>
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/logout_text_view"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:paddingLeft="16dp"
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="12dp"
                 android:text="Logout"
-                android:textSize="16dp"
+                android:textColor="@color/blackTextColor"
+                android:textSize="16sp"
                 android:visibility="gone"
-                tools:visibility="visible"/>
-
-            <View
-                android:id="@+id/logout_text_view_bottom_border"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                android:visibility="gone"
-                tools:visibility="visible"/>
+                tools:visibility="visible" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

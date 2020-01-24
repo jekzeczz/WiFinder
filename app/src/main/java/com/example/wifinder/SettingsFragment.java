@@ -4,17 +4,17 @@ package com.example.wifinder;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-
-import org.w3c.dom.Text;
 
 
 /**
@@ -35,24 +35,29 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         // ログインしている場合のみプロフィールとログアウト、線を表示
         if (FirebaseAuth.getInstance().getUid() != null) {
-            TextView profileView = view.findViewById(R.id.profile_text_view);
-            profileView.setVisibility(View.VISIBLE);
-            view.findViewById(R.id.profile_text_view_bottom_border).setVisibility(View.VISIBLE);
+            TextView setAccountView = view.findViewById(R.id.set_account_text_view);
+            TextView setAccountDescriptionView = view.findViewById(R.id.set_account_description_view);
+            setAccountView.setVisibility(View.VISIBLE);
+            setAccountDescriptionView.setVisibility(View.VISIBLE);
 
-            TextView loginOutView = view.findViewById(R.id.logout_text_view);
-            loginOutView.setVisibility(View.VISIBLE);
-            view.findViewById(R.id.logout_text_view_bottom_border).setVisibility(View.VISIBLE);
+            TextView logoutView = view.findViewById(R.id.logout_text_view);
+            logoutView.setVisibility(View.VISIBLE);
+
             // クリックリスナー設定
-            profileView.setOnClickListener(this);
+            setAccountView.setOnClickListener(this);
+            logoutView.setOnClickListener(this);
         }
         else {
             TextView loginView = view.findViewById(R.id.login_text_view);
+            TextView loginDescriptionView = view.findViewById(R.id.login_description_view);
             loginView.setVisibility(View.VISIBLE);
-            view.findViewById(R.id.logout_text_view_bottom_border).setVisibility(View.VISIBLE);
+            loginDescriptionView.setVisibility(View.VISIBLE);
+
+            loginView.setOnClickListener(this);
         }
 
-        TextView textView2 = view.findViewById(R.id.setting2);
-        textView2.setOnClickListener(this);
+        TextView setLanguageView = view.findViewById(R.id.set_language_text_view);
+        setLanguageView.setOnClickListener(this);
 
         return view;
     }
@@ -62,14 +67,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         Intent intent;
 
         switch (v.getId()) {
-            case R.id.profile_text_view:
-                intent = new Intent(getActivity(), ProfileActivity.class);
-                startActivity(intent);
+           case R.id.set_language_text_view:
+                DialogFragment newFragment = new SelectLanguageDialogFragment();
+                newFragment.show(getActivity().getSupportFragmentManager(), "Select Language");
                 break;
 
-            case R.id.setting2:
-                DialogFragment newFragment = new SelectLanguageDialogFragment();
-                newFragment.show(getActivity().getSupportFragmentManager(), "Select Languages");
+            case R.id.set_account_text_view:
+                intent = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intent);
                 break;
 
             case R.id.login_text_view:
@@ -79,6 +84,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
             case R.id.logout_text_view:
                 // TODO: ログインしているユーザー取得→ログアウトしますか？ダイアログ表示→OKだとauth.signOut()
+
                 break;
         }
     }
