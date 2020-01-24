@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: email, password 変更機能の追加
 public class ProfileActivity extends AppCompatActivity {
     private TextView email;
     private Button signOut;

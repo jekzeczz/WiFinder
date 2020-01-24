@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.w3c.dom.Text;
 
 
 /**
@@ -32,13 +33,22 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        // ログインしている場合のみプロフィールと線を表示
+        // ログインしている場合のみプロフィールとログアウト、線を表示
         if (FirebaseAuth.getInstance().getUid() != null) {
             TextView profileView = view.findViewById(R.id.profile_text_view);
             profileView.setVisibility(View.VISIBLE);
             view.findViewById(R.id.profile_text_view_bottom_border).setVisibility(View.VISIBLE);
+
+            TextView loginOutView = view.findViewById(R.id.logout_text_view);
+            loginOutView.setVisibility(View.VISIBLE);
+            view.findViewById(R.id.logout_text_view_bottom_border).setVisibility(View.VISIBLE);
             // クリックリスナー設定
             profileView.setOnClickListener(this);
+        }
+        else {
+            TextView loginView = view.findViewById(R.id.login_text_view);
+            loginView.setVisibility(View.VISIBLE);
+            view.findViewById(R.id.logout_text_view_bottom_border).setVisibility(View.VISIBLE);
         }
 
         TextView textView2 = view.findViewById(R.id.setting2);
@@ -62,11 +72,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 newFragment.show(getActivity().getSupportFragmentManager(), "Select Languages");
                 break;
 
-            case R.id.setting3:
-
+            case R.id.login_text_view:
+                intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
                 break;
 
-            case R.id.setting4:
+            case R.id.logout_text_view:
+                // TODO: ログインしているユーザー取得→ログアウトしますか？ダイアログ表示→OKだとauth.signOut()
                 break;
         }
     }
