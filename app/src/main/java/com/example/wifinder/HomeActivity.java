@@ -168,4 +168,10 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
         mapFragment.setArguments(bundle);
         loadFragment(mapFragment);
     }
+
+    @Override
+    public void onBackPressed() {
+        // バックキーを押した時はアプリ終了させる
+        finish();
+    }
 }
