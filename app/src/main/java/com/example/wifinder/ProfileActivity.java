@@ -1,29 +1,19 @@
 package com.example.wifinder;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.wifinder.data.model.TestOpenHelper;
-import com.example.wifinder.data.model.User;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
-import java.util.List;
-
 // TODO: email, password 変更機能の追加
 public class ProfileActivity extends AppCompatActivity {
-    private TextView email;
-    private Button signOut;
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
 
@@ -48,8 +38,8 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         };
-        signOut = (Button) findViewById(R.id.sign_out);
-        email = (TextView) findViewById(R.id.email);
+        Button signOut = findViewById(R.id.sign_out);
+        TextView email = findViewById(R.id.email);
         email.setText(user.getEmail());
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
     //sign out method
     public void signOut() {
         auth.signOut();
+        finish();
     }
 
     @Override
