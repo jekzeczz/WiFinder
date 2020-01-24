@@ -76,9 +76,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     private List<Spots> spotsList;
 
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+    // スポット情報を表示するカスタムビューを入れておく親ビュー
     private FrameLayout containerView;
+
+    // スポット情報を表示するカスタムビュー
+    private CustomView customView;
 
     private ProgressBar progressBar;
 
@@ -187,6 +189,28 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
             // デバイスの位置情報があった場合はそれをデフォルト値にする
             mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
         }
+
+        // マーカー以外のマップをクリックした場合
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                // スポット情報ビューが開かれている場合消す
+                if (customView != null) {
+                    containerView.removeAllViews();
+                }
+            }
+        });
+
+        // マップで移動した場合
+        mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+            @Override
+            public void onCameraMoveStarted(int i) {
+                // スポット情報ビューが開かれている場合消す
+                if (customView != null) {
+                    containerView.removeAllViews();
+                }
+            }
+        });
 
         // マーカーをクリックしたら店情報が出るように。
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -314,8 +338,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     private void addCustomView(Spots spot, float avgRating) {
         if (getContext() != null) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             // TODO: ビューを消す処理も入れとく必要がある containerView.removeAllViews() 的に。
-            final CustomView customView = new CustomView(getContext());
+            customView = new CustomView(getContext());
             customView.setSpot(spot);
             customView.setUser(user);
             customView.setRatingBar(avgRating);
