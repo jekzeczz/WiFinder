@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.wifinder.data.SpotsAdapter;
+import com.example.wifinder.data.defineAddressIdLanguage;
 import com.example.wifinder.data.model.RatingResult;
 import com.example.wifinder.data.model.Spots;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -36,6 +37,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -150,7 +153,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 LatLng place = new LatLng(spotsList.get(i).getLatitude(), spotsList.get(i).getLongitude());
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(place);
+                //--------------------------------------------アイコン判断------------------------------------------
+                BitmapDescriptor icon;
+                if( spotsList.get(i).getSsid().equals(defineAddressIdLanguage.s1)){
+                    icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_seven);
+                    markerOptions.icon(icon);
+                }else if(spotsList.get(i).getSsid().equals(defineAddressIdLanguage.s5)){
+                    icon = BitmapDescriptorFactory.fromResource(R.drawable.apli_2);
+                    markerOptions.icon(icon);
+                }
                 Marker marker = mMap.addMarker(markerOptions);
+
+
                 // spot データ保存
                 marker.setTag(spotsList.get(i));
             }

@@ -4,70 +4,101 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:layout_editor_absoluteY="25dp">
 
 
-    <ImageView
-        android:id="@+id/main_image"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_wifinder_app"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/fuji"
+        tools:layout_editor_absoluteX="-206dp"
+        tools:layout_editor_absoluteY="16dp" />
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/main_image"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:textSize="32sp"
-        android:text="@string/app_name"/>
+        android:layout_width="169dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="156dp"
+        android:alpha="0.6"
+        android:text="@string/app_name"
+        android:textColor="@color/colorTextIcon"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.462"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="193dp"
+        android:layout_height="44dp"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginBottom="48dp"
+        android:alpha="0.6"
         android:background="@drawable/circle"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/colorSecondaryText"
         android:text="@string/res_login"
         android:textColor="@color/colorTextIcon"
-        android:textSize="18sp"
+        android:textSize="21sp"
         app:layout_constraintBottom_toTopOf="@+id/noLogin"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.414"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/title" />
+        app:layout_constraintTop_toTopOf="@+id/title"
+        app:layout_constraintVertical_bias="0.737" />
 
     <Button
         android:id="@+id/signUp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="193dp"
+        android:layout_height="44dp"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginBottom="48dp"
+        android:alpha="0.6"
+        android:backgroundTint="@color/colorSecondaryText"
         android:background="@drawable/circle"
-        android:backgroundTint="@color/colorPrimary"
         android:text="@string/res_signUp"
         android:textColor="@color/colorTextIcon"
-        android:textSize="18sp"
+        android:textSize="21sp"
         app:layout_constraintBottom_toTopOf="@+id/noLogin"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.456"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login" />
+        app:layout_constraintTop_toBottomOf="@+id/login"
+        app:layout_constraintVertical_bias="0.883" />
 
     <TextView
         android:id="@+id/noLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="16dp"
+        android:alpha="0.7"
+
         android:text="@string/res_noLogin"
+        android:textColor="@color/colorTextIcon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="97dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="212dp"
+        android:alpha="0.6"
+
+        android:text="in Japan"
+        android:textColor="@color/colorTextIcon"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.813"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
