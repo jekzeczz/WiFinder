@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText editTextEmail, editTextPassword;
+    private EditText editTextEmail, editTextPassword, editTextPasswordConfirm;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
 
@@ -30,6 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
+        editTextPasswordConfirm = findViewById(R.id.password_confirm);
         progressBar = findViewById(R.id.loading);
 
         findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
@@ -51,6 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void signUpUser() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
+        String passwordConfirm = editTextPasswordConfirm.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
             editTextEmail.setError("Please enter your email");
@@ -66,6 +68,18 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(password)) {
             editTextPassword.setError("Enter a password");
+            editTextPassword.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(passwordConfirm)) {
+            editTextPasswordConfirm.setError("Enter a confirmation password");
+            editTextPassword.requestFocus();
+            return;
+        }
+
+        if (!passwordConfirm.equals(password)) {
+            editTextPasswordConfirm.setError("Password Not matching");
             editTextPassword.requestFocus();
             return;
         }

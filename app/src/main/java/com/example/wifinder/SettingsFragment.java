@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -40,12 +42,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             setAccountView.setVisibility(View.VISIBLE);
             setAccountDescriptionView.setVisibility(View.VISIBLE);
 
-            TextView logoutView = view.findViewById(R.id.logout_text_view);
-            logoutView.setVisibility(View.VISIBLE);
-
             // クリックリスナー設定
             setAccountView.setOnClickListener(this);
-            logoutView.setOnClickListener(this);
         }
         else {
             TextView loginView = view.findViewById(R.id.login_text_view);
@@ -58,6 +56,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         TextView setLanguageView = view.findViewById(R.id.set_language_text_view);
         setLanguageView.setOnClickListener(this);
+
+        Button refreshButton = view.findViewById(R.id.refresh_button);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "更新ボタンです", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }
@@ -80,11 +86,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             case R.id.login_text_view:
                 intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
-                break;
-
-            case R.id.logout_text_view:
-                // TODO: ログインしているユーザー取得→ログアウトしますか？ダイアログ表示→OKだとauth.signOut()
-
                 break;
         }
     }

@@ -20,7 +20,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // TODO : assets ディレクトリ内にある場合 ""、その他はPATHを記入
     private static String DB_PATH = "";
     // TODO : assets ディレクトリ内にあるDB名または別途のデータベースのファイル名
-    private static String DB_NAME ="test6.db";
+    private static String DB_NAME ="wifinder.db";
 
     private SQLiteDatabase mDataBase;
     private final Context mContext;
