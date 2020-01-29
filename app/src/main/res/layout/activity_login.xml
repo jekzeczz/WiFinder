@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/logo_image"
-            android:layout_width="219dp"
-            android:layout_height="213dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_gravity="center"
             android:layout_marginTop="40dp" />
 
@@ -131,7 +131,7 @@
 
         <Button
             android:id="@+id/login"
-            android:layout_width="356dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="32dp"
