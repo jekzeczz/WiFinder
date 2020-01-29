@@ -158,13 +158,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 if( spotsList.get(i).getSsid().equals(defineAddressIdLanguage.s1)){
                     icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_seven1);
                     markerOptions.icon(icon);
+                }
+                else if(spotsList.get(i).getSsid().equals(defineAddressIdLanguage.s3)){
+                    icon = BitmapDescriptorFactory.fromResource(R.drawable.haneda);
+                    markerOptions.icon(icon);
                 }else if(spotsList.get(i).getSsid().equals(defineAddressIdLanguage.s5)){
                     icon = BitmapDescriptorFactory.fromResource(R.drawable.apli_2);
                     markerOptions.icon(icon);
                 }else if(spotsList.get(i).getSsid().equals(defineAddressIdLanguage.s10)){
-                    icon = BitmapDescriptorFactory.fromResource(R.drawable.familymark);
+                    icon = BitmapDescriptorFactory.fromResource(R.drawable.family);
+                    markerOptions.icon(icon);
+                }else if(spotsList.get(i).getSsid().equals(defineAddressIdLanguage.s12)){
+                    icon = BitmapDescriptorFactory.fromResource(R.drawable.keisei);
+                    markerOptions.icon(icon);
+                }else if(spotsList.get(i).getSsid().equals(defineAddressIdLanguage.s13)){
+                    icon = BitmapDescriptorFactory.fromResource(R.drawable.ntt);
                     markerOptions.icon(icon);
                 }
+
                 Marker marker = mMap.addMarker(markerOptions);
 
 
