@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/sakura"
         android:adjustViewBounds="true"
+        android:background="@drawable/sakura"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
@@ -39,6 +40,7 @@
             android:text="Login to continue using Wi-Finder"
             android:textColor="@color/colorTextIcon"
             android:textSize="20sp" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/email_card_view"
             android:layout_width="match_parent"
@@ -70,12 +72,13 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
                     android:background="@color/colorTextIcon"
-
                     android:hint="Email"
                     android:inputType="text"
                     android:textColorHint="@color/colorPrimaryText" />
             </LinearLayout>
+
         </androidx.cardview.widget.CardView>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/password_card_view"
             android:layout_width="match_parent"
@@ -109,17 +112,17 @@
                     android:maxLines="1"
                     android:textColorHint="@color/colorPrimaryText" />
             </LinearLayout>
+
         </androidx.cardview.widget.CardView>
+
         <TextView
             android:id="@+id/forgot_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/login"
-            android:layout_alignRight="@+id/password_card_view"
-            android:clickable="true"
             android:layout_gravity="right"
             android:layout_marginRight="24dp"
             android:layout_marginBottom="24dp"
+            android:clickable="true"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:text="Forgot password?"
@@ -134,12 +137,12 @@
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:layout_marginBottom="48dp"
+            android:alpha="0.7"
             android:background="@drawable/circle"
             android:backgroundTint="@color/colorPrimaryDark"
             android:gravity="center"
             android:padding="16dp"
             android:text="Log In"
-            android:alpha="0.7"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
@@ -150,6 +153,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="16dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -157,6 +161,7 @@
                 android:text="New User?"
                 android:textColor="#606470"
                 android:textSize="16dp" />
+
             <TextView
                 android:id="@+id/signUp"
                 android:layout_width="wrap_content"
@@ -167,6 +172,7 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="16sp" />
         </LinearLayout>
+
         <ProgressBar
             android:id="@+id/loading"
             android:layout_width="wrap_content"

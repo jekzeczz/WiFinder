@@ -3,18 +3,15 @@ package com.example.wifinder;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -57,6 +54,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         TextView setLanguageView = view.findViewById(R.id.set_language_text_view);
         setLanguageView.setOnClickListener(this);
 
+        /* TODO: 使わなかったら場合消す */
         Button refreshButton = view.findViewById(R.id.refresh_button);
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
