@@ -10,4 +10,6 @@ public class defineAddressIdLanguage {
     public static String s7="Midtown_Free_Wi-Fi";
     public static String s8="MSP_Free_Wi-Fi";
     public static String s9="Tokyo-BigSight_Wi-Fi";
+    public static String s10="Famima_Wi-Fi";
+
 }
