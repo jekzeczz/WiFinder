@@ -35,6 +35,7 @@
     <string name="res_english">English</string>
     <string name="res_japanese">Japanese</string>
     <string name="res_korean">Korean</string>
+    <string name="res_chinese">Chinese</string>
 
 
 </resources>

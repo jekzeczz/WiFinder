@@ -56,6 +56,9 @@ public class SelectLanguageDialogFragment extends DialogFragment {
                             case 2:
                                 setLocale("ko");
                                 break;
+                            case 3:
+                                setLocale("zh");
+                                break;
                         }
                         startActivity(new Intent(getActivity(), MainActivity.class));
                     }
