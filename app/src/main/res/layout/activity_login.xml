@@ -19,7 +19,7 @@
         <ImageView
             android:id="@+id/logo_image"
             android:layout_width="171dp"
-            android:layout_height="164dp"
+            android:layout_height="143dp"
             android:layout_gravity="center"
             android:layout_marginTop="40dp" />
 
@@ -134,15 +134,15 @@
 
         <LinearLayout
             android:id="@+id/login_layout"
-            android:layout_width="391dp"
-            android:layout_height="36dp"
+            android:layout_width="397dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="38dp"
                 android:layout_gravity="center"
                 android:text="New User?"
                 android:textColor="#606470"
@@ -151,7 +151,7 @@
             <TextView
                 android:id="@+id/signUp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="38dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="6dp"
                 android:text="Sign up for a new account"
