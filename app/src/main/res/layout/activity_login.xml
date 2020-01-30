@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/logo_image"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="169dp"
+            android:layout_height="166dp"
             android:layout_gravity="center"
             android:layout_marginTop="40dp" />
 
@@ -136,7 +136,7 @@
         <LinearLayout
             android:id="@+id/login_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="183dp"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="16dp">
