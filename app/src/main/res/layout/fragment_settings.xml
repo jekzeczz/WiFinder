@@ -25,7 +25,7 @@
                 android:paddingLeft="16dp"
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
-                android:text="Language"
+                android:text="@string/res_language"
                 android:textColor="@color/blackTextColor"
                 android:textSize="14sp" />
 
@@ -36,7 +36,7 @@
                 android:paddingLeft="16dp"
                 android:paddingTop="8dp"
                 android:paddingRight="16dp"
-                android:text="Set Language"
+                android:text="@string/res_set_language"
                 android:textColor="@color/blackTextColor"
                 android:textSize="16sp" />
 
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="16dp"
                 android:paddingBottom="12dp"
-                android:text="You can change the language of the application"
+                android:text="@string/res_set_language_description"
                 android:textSize="12sp" />
 
             <TextView
@@ -55,7 +55,7 @@
                 android:paddingLeft="16dp"
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
-                android:text="Account"
+                android:text="@string/res_account"
                 android:textColor="@color/blackTextColor"
                 android:textSize="14sp" />
 
@@ -66,7 +66,7 @@
                 android:paddingLeft="16dp"
                 android:paddingTop="8dp"
                 android:paddingRight="16dp"
-                android:text="Set Account"
+                android:text="@string/res_set_account"
                 android:textColor="@color/blackTextColor"
                 android:textSize="16sp"
                 android:visibility="gone"
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="16dp"
                 android:paddingBottom="12dp"
-                android:text="You can change the e-mail and password"
+                android:text="@string/res_set_account_description"
                 android:textSize="12sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -90,7 +90,7 @@
                 android:paddingLeft="16dp"
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
-                android:text="Login"
+                android:text="@string/res_login_in_settings"
                 android:textColor="@color/blackTextColor"
                 android:textSize="16sp"
                 android:visibility="gone"
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="16dp"
                 android:paddingBottom="12dp"
-                android:text="Do you have an account? Please Login"
+                android:text="@string/res_please_login"
                 android:textSize="12sp"
                 android:visibility="gone"
                 tools:visibility="visible" />

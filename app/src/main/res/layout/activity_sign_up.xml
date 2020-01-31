@@ -74,7 +74,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
                         android:background="@color/white"
-                        android:hint="Email"
+                        android:hint="@string/res_email"
                         android:inputType="text"
                         android:textColorHint="@android:color/black" />
                 </LinearLayout>
@@ -108,7 +108,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
                         android:background="@color/white"
-                        android:hint="Password"
+                        android:hint="@string/res_password"
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:textColorHint="@android:color/black" />
@@ -142,7 +142,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="8dp"
                         android:background="@color/white"
-                        android:hint="Password Confirm"
+                        android:hint="@string/res_password_confirm"
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:textColorHint="@android:color/black" />
@@ -160,7 +160,7 @@
                 android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:padding="16dp"
-                android:text="Sign Up"
+                android:text="@string/res_signUp"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -176,7 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Already a User?"
+                    android:text="@string/res_question_alreadyuser"
                     android:textColor="#606470"
                     android:textSize="16dp" />
 
@@ -186,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="6dp"
-                    android:text="Login now"
+                    android:text="@string/res_answer_loginnow"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp" />
             </LinearLayout>

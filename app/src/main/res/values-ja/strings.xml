@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Wi-Finder</string>
     <string name="title_activity_login">Login</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_home">Home</string>
+    <string name="title_activity_profile">Profile</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
@@ -9,31 +12,51 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="title_activity_maps">Map</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_home">HomeActivity</string>
+
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-
-    <string name="title_activity_profile">Profile</string>
     <string name="action_settings">Settings</string>
 
-    <string name="res_map">マップ</string>
-    <string name="res_favorite">お気に入り</string>
-    <string name="res_settings">設定</string>
-    <string name="res_login">ログイン</string>
-    <string name="res_signUp">会員登録</string>
-    <string name="res_question_login">アカウントをお持ちでないですか？</string>
-    <string name="res_noLogin">ログインなしで始める</string>
-    <string name="res_question_signUp">アカウントをお持ちですか？</string>
-    <string name="res_profile">プロフィール</string>
-    <string name="res_languages">言語</string>
-    <string name="res_username">ユーザー名</string>
     <string name="res_english">英語</string>
     <string name="res_japanese">日本語</string>
     <string name="res_korean">韓国語</string>
     <string name="res_chinese">中国語</string>
+
+    <!-- Main Activity Strings -->
+    <string name="res_login">ログイン</string>
+    <string name="res_signUp">会員登録</string>
+    <string name="res_noLogin">ログインなしで始める</string>
+
+    <!-- Login, SignUp Activity Strings -->
+    <string name="res_email">メールアドレス</string>
+    <string name="res_password">パスワード</string>
+    <string name="res_password_confirm">パスワード確認</string>
+    <string name="res_question_newuser">アカウントをお持ちでないですか？</string>
+    <string name="res_answer_signup">アカウント登録</string>
+    <string name="res_question_alreadyuser">アカウントをお持ちですか？</string>
+    <string name="res_answer_loginnow">ログイン</string>
+
+    <!-- Bottom Navigation Strings -->
+    <string name="res_map">マップ</string>
+    <string name="res_favorite">お気に入り</string>
+    <string name="res_settings">設定</string>
+
+    <!-- Profile Activity Strings -->
+    <string name="res_signout">ログアウト</string>
+
+    <!-- Settings Fragment Strings -->
+    <string name="res_language">言語</string>
+    <string name="res_set_language">言語設定</string>
+    <string name="res_set_language_description">アプリケーションの言語を切り替えできます。</string>
+    <string name="res_account">アカウント</string>
+    <string name="res_set_account">アカウント設定</string>
+    <string name="res_set_account_description">メールアドレスを確認できます。</string>
+    <string name="res_login_in_settings">ログイン</string>
+    <string name="res_please_login">アカウントをお持ちですか？ログインしてください。</string>
+
 </resources>

@@ -71,7 +71,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
                     android:background="@color/colorTextIcon"
-                    android:hint="Email"
+                    android:hint="@string/res_email"
                     android:inputType="text"
                     android:textColorHint="@color/colorPrimaryText" />
             </LinearLayout>
@@ -106,7 +106,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
                     android:background="@color/colorTextIcon"
-                    android:hint="Password"
+                    android:hint="@string/res_password"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:textColorHint="@color/colorPrimaryText" />
@@ -128,7 +128,7 @@
             android:backgroundTint="@color/colorPrimaryDark"
             android:gravity="center"
             android:padding="16dp"
-            android:text="Log In"
+            android:text="@string/res_login"
             android:textColor="@color/colorTextIcon"
             android:textSize="16sp" />
 
@@ -144,7 +144,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="38dp"
                 android:layout_gravity="center"
-                android:text="New User?"
+                android:text="@string/res_question_newuser"
                 android:textColor="#606470"
                 android:textSize="16dp" />
 
@@ -154,7 +154,7 @@
                 android:layout_height="38dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="6dp"
-                android:text="Sign up for a new account"
+                android:text="@string/res_answer_signup"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="16sp" />
         </LinearLayout>
