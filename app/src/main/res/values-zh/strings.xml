@@ -42,7 +42,7 @@
     <string name="res_answer_loginnow">登陆</string>
 
     <!-- Bottom Navigation Strings -->
-    <string name="res_map">マップ</string>
+    <string name="res_map">地图</string>
     <string name="res_favorite">喜欢</string>
     <string name="res_settings">设定</string>
 
