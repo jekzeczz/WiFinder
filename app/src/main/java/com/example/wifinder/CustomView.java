@@ -80,7 +80,7 @@ public class CustomView extends FrameLayout {
         ratingBar = findViewById(R.id.rating_bar);
 
         // TODO: 一回評価したユーザーはボタンを表示しないようにするとか？
-        Button reviewButton = view.findViewById(R.id.review_button);
+        ImageButton reviewButton = view.findViewById(R.id.review_button);
         reviewButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
