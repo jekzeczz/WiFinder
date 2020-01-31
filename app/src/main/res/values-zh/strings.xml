@@ -28,35 +28,35 @@
     <string name="res_chinese">中国語</string>
 
     <!-- Main Activity Strings -->
-    <string name="res_login">ログイン</string>
-    <string name="res_signUp">会員登録</string>
-    <string name="res_noLogin">ログインなしで始める</string>
+    <string name="res_login">登陆</string>
+    <string name="res_signUp">注册</string>
+    <string name="res_noLogin">未登陆下使用</string>
 
     <!-- Login, SignUp Activity Strings -->
-    <string name="res_email">メールアドレス</string>
-    <string name="res_password">パスワード</string>
-    <string name="res_password_confirm">パスワード確認</string>
-    <string name="res_question_newuser">アカウントをお持ちでないですか？</string>
-    <string name="res_answer_signup">アカウント登録</string>
-    <string name="res_question_alreadyuser">アカウントをお持ちですか？</string>
-    <string name="res_answer_loginnow">ログイン</string>
+    <string name="res_email">邮件地址</string>
+    <string name="res_password">密码</string>
+    <string name="res_password_confirm">密码确认</string>
+    <string name="res_question_newuser">没有持有账号吗？</string>
+    <string name="res_answer_signup">账号登陆</string>
+    <string name="res_question_alreadyuser">持有账号吗？</string>
+    <string name="res_answer_loginnow">登陆</string>
 
     <!-- Bottom Navigation Strings -->
     <string name="res_map">マップ</string>
-    <string name="res_favorite">お気に入り</string>
-    <string name="res_settings">設定</string>
+    <string name="res_favorite">喜欢</string>
+    <string name="res_settings">设定</string>
 
     <!-- Profile Activity Strings -->
-    <string name="res_signout">ログアウト</string>
+    <string name="res_signout">登出</string>
 
     <!-- Settings Fragment Strings -->
-    <string name="res_language">言語</string>
-    <string name="res_set_language">言語設定</string>
-    <string name="res_set_language_description">アプリケーションの言語を切り替えできます。</string>
-    <string name="res_account">アカウント</string>
-    <string name="res_set_account">アカウント設定</string>
-    <string name="res_set_account_description">メールアドレスを確認できます。</string>
-    <string name="res_login_in_settings">ログイン</string>
-    <string name="res_please_login">アカウントをお持ちですか？ログインしてください。</string>
+    <string name="res_language">语言</string>
+    <string name="res_set_language">语言设置</string>
+    <string name="res_set_language_description">使用语言切换</string>
+    <string name="res_account">账户</string>
+    <string name="res_set_account">账户设定</string>
+    <string name="res_set_account_description">邮件确定</string>
+    <string name="res_login_in_settings">登入</string>
+    <string name="res_please_login">拥有账号吗？请选择登陆</string>
 
 </resources>
