@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.example.wifinder.MainActivity.queren;
+
 public class mSurfaceView extends SurfaceView implements SurfaceHolder.Callback,Runnable {
 
     //用于标注线程是否继续
@@ -57,12 +59,14 @@ public class mSurfaceView extends SurfaceView implements SurfaceHolder.Callback,
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         //初始化画笔等
-        init();
+        if(queren == 1){
+            init();
 
-        Flag=true;
+            Flag=true;
 
-        //启动线程绘制雨滴
-        new Thread(this).start();
+            //启动线程绘制雨滴
+            new Thread(this).start();
+        }
     }
 
     private void init() {
