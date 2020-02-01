@@ -71,11 +71,11 @@ public class mSurfaceView extends SurfaceView implements SurfaceHolder.Callback,
         //抗锯齿
         paint.setAntiAlias(true);
         //设置画笔颜色
-        paint.setColor(Color.LTGRAY);
+        paint.setColor(Color.parseColor("#87CEEB"));
         //设置画笔模式为填充
         paint.setStyle(Paint.Style.FILL);
         //设置画笔宽度为2
-        paint.setStrokeWidth(2f);
+        paint.setStrokeWidth(3f);
     }
 
     //添加雨滴
@@ -130,15 +130,15 @@ public class mSurfaceView extends SurfaceView implements SurfaceHolder.Callback,
                 int c=random.nextInt(3);
                 if (c==0){
                     line.setStarty(line.getStarty()+30);
-                    line.setStopy(line.getStarty()+50);
+                    line.setStopy(line.getStarty()+70);
                 }
                 if (c==1){
                     line.setStarty(line.getStarty()+40);
-                    line.setStopy(line.getStarty()+60);
+                    line.setStopy(line.getStarty()+70);
                 }
                 if (c==2){
                     line.setStarty(line.getStarty()+50);
-                    line.setStopy(line.getStarty()+40);
+                    line.setStopy(line.getStarty()+50);
                 }
                 if (c==3){
                     line.setStarty(line.getStarty()+60);
@@ -153,7 +153,7 @@ public class mSurfaceView extends SurfaceView implements SurfaceHolder.Callback,
             //添加雨滴
             addline();
             //当雨滴大于100条时 删除第一个 让雨滴保持在100条
-            if (lines.size()>80){
+            if (lines.size()>70){
                 lines.remove(0);
             }
             Log.d("log", "run: "+lines.size());
