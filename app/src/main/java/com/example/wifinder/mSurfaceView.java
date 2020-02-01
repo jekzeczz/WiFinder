@@ -71,7 +71,7 @@ public class mSurfaceView extends SurfaceView implements SurfaceHolder.Callback,
         //抗锯齿
         paint.setAntiAlias(true);
         //设置画笔颜色
-        paint.setColor(Color.parseColor("#87CEEB"));
+        paint.setColor(Color.LTGRAY);
         //设置画笔模式为填充
         paint.setStyle(Paint.Style.FILL);
         //设置画笔宽度为2
