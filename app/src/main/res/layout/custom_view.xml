@@ -7,18 +7,6 @@
     android:background="@drawable/circle"
     android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/we"
-            android:layout_width="40dp"
-            android:layout_height="28dp"
-            android:layout_marginStart="176dp"
-            android:layout_marginTop="16dp"
-            android:background="#FFFFFFFF"
-            android:src="@drawable/heart2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/review_button"
-            app:layout_constraintTop_toBottomOf="@id/line_vertical_center" />
-
         <TextView
             android:id="@+id/name_view"
             android:layout_width="match_parent"

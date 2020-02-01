@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,11 +40,21 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
 
     private List<Favorite> favorites;
 
+     private mSurfaceView m;
+
+     private ImageButton weather;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        weather = findViewById(R.id.weather);
+        weather.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                m.setq();
+                m.onCilck();
+            }
+        });
         // permission チェック
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // 許可されてないので許可を求める

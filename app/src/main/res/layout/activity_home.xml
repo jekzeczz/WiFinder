@@ -19,6 +19,12 @@
             android:id="@+id/mSurfaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <ImageButton
+            android:id="@+id/weather"
+            android:layout_width="48dp"
+            android:layout_height="55dp"
+            app:srcCompat="@color/bisque" />
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

@@ -68,7 +68,12 @@ public class mSurfaceView extends SurfaceView implements SurfaceHolder.Callback,
             new Thread(this).start();
         }
     }
-
+    public void onCilck(){
+        surfaceCreated(surfaceHolder);
+    }
+    public void setq(){
+        queren = 1;
+    }
     private void init() {
         //设置画笔颜色
         paint.setColor(Color.WHITE);
