@@ -71,6 +71,7 @@ public class mSurfaceView extends SurfaceView implements SurfaceHolder.Callback,
     public void onCilck(){
         surfaceCreated(surfaceHolder);
     }
+
     public void setq(){
         queren = 1;
     }
