@@ -22,9 +22,13 @@
 
         <Button
             android:id="@+id/weather"
-            android:layout_width="69dp"
-            android:layout_height="90dp"
-            android:text="Button" />
+            android:layout_width="51dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+
+
+            android:background="@drawable/rain22" />
 
     </FrameLayout>
 
