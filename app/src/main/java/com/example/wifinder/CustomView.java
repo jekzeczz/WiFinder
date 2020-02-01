@@ -80,13 +80,7 @@ public class CustomView extends FrameLayout {
         nameView = findViewById(R.id.name_view);
         addressView = findViewById(R.id.address_view);
         ratingBar = findViewById(R.id.rating_bar);
-        we = findViewById(R.id.we);
-        we.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                queren = 1;
-            }
-        });
+
         // TODO: 一回評価したユーザーはボタンを表示しないようにするとか？
         ImageButton reviewButton = view.findViewById(R.id.review_button);
         reviewButton.setOnClickListener(new OnClickListener() {

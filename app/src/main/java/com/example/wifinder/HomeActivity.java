@@ -42,7 +42,7 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
 
      private mSurfaceView m;
 
-     private ImageButton weather;
+     public ImageButton weather;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
