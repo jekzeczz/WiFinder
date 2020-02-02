@@ -31,13 +31,14 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/rain22" />
+
     <Button
         android:id="@+id/snow"
         android:layout_width="51dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="80dp"
-        android:background="@drawable/rain22" />
+        android:background="@drawable/sno" />
 
     <!-- TODO: layout_height は wrap_content が理想的 -->
     <FrameLayout
