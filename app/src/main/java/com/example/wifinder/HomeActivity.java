@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,21 +41,16 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
     private List<Favorite> favorites;
 
      private mSurfaceView m;
-
+     private  FallingView fallingView;
      public Button weather;
+     public Button snow;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        weather = findViewById(R.id.weather);
-        m = findViewById(R.id.mSurfaceView);
-        weather.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                m.setq();
-                m.onCilck();
-            }
-        });
+
+
         // permission チェック
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // 許可されてないので許可を求める
@@ -109,6 +103,9 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
     };
 
     private void initMapFragment() {
+
+
+
         // マップ表示
         if (mapFragment == null) {
             mapFragment = new MapsFragment();

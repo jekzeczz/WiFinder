@@ -15,20 +15,8 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <com.example.wifinder.mSurfaceView
-            android:id="@+id/mSurfaceView"
-            android:layout_width="match_parent"
-            android:layout_height="537dp" />
-
-        <Button
-            android:id="@+id/weather"
-            android:layout_width="51dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
 
 
-            android:background="@drawable/rain22" />
 
     </FrameLayout>
 
