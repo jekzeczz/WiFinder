@@ -9,13 +9,14 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@drawable/hiru"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:orientation="vertical">
 
             <ImageView
@@ -66,7 +67,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@android:drawable/ic_dialog_email" />
+                        android:src="@drawable/messigeicon" />
 
                     <EditText
                         android:id="@+id/email"
@@ -100,7 +101,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@android:drawable/ic_lock_lock" />
+                        android:src="@drawable/lockicom" />
 
                     <EditText
                         android:id="@+id/password"
@@ -134,7 +135,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@android:drawable/ic_lock_lock" />
+                        android:src="@drawable/lockicom" />
 
                     <EditText
                         android:id="@+id/password_confirm"
@@ -151,17 +152,18 @@
 
             <Button
                 android:id="@+id/signUp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="343dp"
+                android:layout_height="61dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="32dp"
                 android:layout_marginBottom="48dp"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/circle"
+                android:drawableRight="@drawable/phone1"
                 android:gravity="center"
                 android:padding="16dp"
                 android:text="@string/res_signUp"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimaryText"
                 android:textSize="16sp" />
 
             <LinearLayout
