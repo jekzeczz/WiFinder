@@ -39,12 +39,12 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_WITHOUT_LOGIN, Context.MODE_PRIVATE);
         boolean isWithoutLogin = sharedPreferences.getBoolean(WITHOUT_LOGIN_KEY, false);
-        // ログインしたことがある ||「ログインなしで始める」をタップしたことがある
-        if (user != null || isWithoutLogin) {
-            // アプリ起動際にログイン画面出るのはうざいのでHomeActivityに遷移させてこの画面をfinishする
-            navigateToHomeActivity();
-            return;
-        }
+//        // ログインしたことがある ||「ログインなしで始める」をタップしたことがある
+//        if (user != null || isWithoutLogin) {
+//            // アプリ起動際にログイン画面出るのはうざいのでHomeActivityに遷移させてこの画面をfinishする
+//            navigateToHomeActivity();
+//            return;
+//        }
 
         //Login画面に遷移する
         Button loginButton = findViewById(R.id.login);
