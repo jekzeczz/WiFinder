@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,10 +40,16 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
 
     private List<Favorite> favorites;
 
+     private mSurfaceView m;
+     private  FallingView fallingView;
+     public Button weather;
+     public Button snow;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
 
         // permission チェック
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -95,6 +103,9 @@ public class HomeActivity extends AppCompatActivity implements FavoriteFragment.
     };
 
     private void initMapFragment() {
+
+
+
         // マップ表示
         if (mapFragment == null) {
             mapFragment = new MapsFragment();

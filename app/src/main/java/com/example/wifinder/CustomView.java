@@ -33,19 +33,21 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import static com.example.wifinder.MainActivity.queren;
+
 public class CustomView extends FrameLayout {
 
     private Spots spot;
     private TextView nameView;
     private TextView addressView;
     private RatingBar ratingBar;
-
+    private ImageButton we;
     private float ratingValue = 0.0F;
     final private Integer FAV_YES = 1;
     final private Integer FAV_NO = 0;
     public Integer dbSpotId;
     public Integer dbIsFavorite;
-
+    public  mSurfaceView m;
     private Integer spotId;
     private String spotName;
     private String spotAddress;
