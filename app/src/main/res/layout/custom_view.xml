@@ -45,52 +45,57 @@
             app:layout_constraintStart_toStartOf="parent"
             android:background="@color/colorDivider" />
 
-        <ImageButton
-            android:id="@+id/review_button"
-            android:layout_width="32dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="55dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/shape"
-            android:src="@drawable/start8"
-            android:text="評価する"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/line_vertical_center" />
+            app:layout_constraintTop_toBottomOf="@id/line_vertical_center">
 
-        <ImageButton
-            android:id="@+id/favorite_button"
-            android:layout_width="40dp"
-            android:layout_height="28dp"
-            android:layout_marginLeft="64dp"
-            android:layout_marginTop="10dp"
-            android:background="#FFFFFFFF"
-            android:src="@drawable/heart2"
-            app:layout_constraintStart_toEndOf="@id/review_button"
-            app:layout_constraintTop_toBottomOf="@id/line_vertical_center" />
+                <ImageButton
+                    android:id="@+id/review_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape"
+                    android:src="@drawable/start8"
+                    android:text="評価する"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/layout2" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="43dp"
-            android:layout_height="17dp"
-            android:layout_marginStart="52dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="評価"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/review_button" />
+                <ImageButton
+                    android:id="@+id/favorite_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:background="@drawable/shape"
+                    android:src="@drawable/heart2"
+                    app:layout_constraintStart_toEndOf="@id/review_button"
+                    app:layout_constraintTop_toTopOf="@id/layout2" />
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="43dp"
-            android:layout_height="19dp"
-            android:layout_marginStart="56dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:text="保存"
-            app:layout_constraintStart_toEndOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/favorite_button" />
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:gravity="center"
+                    android:text="評価"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/review_button"/>
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="47dp"
+                    android:gravity="center"
+                    android:text="保存"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@id/textView2"
+                    app:layout_constraintTop_toBottomOf="@+id/favorite_button" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
