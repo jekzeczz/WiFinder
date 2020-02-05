@@ -112,6 +112,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
+                android:visibility="gone"
+                tools:visibility="visible"
                 android:text="更新" />
         </LinearLayout>
     </ScrollView>

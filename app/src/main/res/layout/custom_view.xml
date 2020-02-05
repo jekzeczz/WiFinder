@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/circle"
     android:orientation="vertical">
 
         <TextView
@@ -14,7 +13,6 @@
             android:textColor="@color/blackTextColor"
             android:textSize="18sp"
             app:layout_constraintTop_toTopOf="parent"
-
             tools:text="aa" />
 
         <RatingBar
@@ -34,8 +32,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rating_bar"
             tools:text="aa" />
-
-
 
         <View
             android:id="@+id/line_vertical_center"

@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -28,7 +27,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.wifinder.data.SpotsAdapter;
-import com.example.wifinder.data.defineAddressIdLanguage;
 import com.example.wifinder.data.model.RatingResult;
 import com.example.wifinder.data.model.Spots;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -93,11 +91,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
     // お気に入りリストから選んだ spotId
     private Integer favoriteSpotId;
-
-    private mSurfaceView m;
-    private  FallingView fallingView;
-    public Button weather;
-    public Button snow;
     public MapsFragment() {
         // Required empty public constructor
     }
@@ -131,30 +124,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
 
         // 親View
         containerView = rootView.findViewById(R.id.custom_view_container);
-        weather = rootView.findViewById(R.id.weather);
-        m = rootView.findViewById(R.id.mSurfaceView);
-        weather.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                m.setq();
-                m.onCilck();
-            }
-        });
         progressBar = rootView.findViewById(R.id.progress);
-        fallingView = rootView.findViewById(R.id.fallingView);
-        snow = rootView.findViewById(R.id.snow);
-        snow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FallObject.Builder builder = new FallObject.Builder(getResources().getDrawable(R.drawable.snowflake));
-                FallObject fallObject = builder
-                        .setSpeed(8,true)
-                        .setSize(80,80,true)
-                        .setWind(5,true)
-                        .build();
-                fallingView.addFallObject(fallObject,60);//添加50个雪球对象
-            }
-        });
         return rootView;
     }
 
