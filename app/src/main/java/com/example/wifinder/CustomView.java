@@ -114,7 +114,7 @@ public class CustomView extends FrameLayout {
         final View customView = inflate(context, R.layout.rating_layout, null);
         // dialog にレイアウトセット
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setTitle("Wifiはいかがでしたか？");
+        dialog.setTitle("Wi-Fiはいかがでしたか？");
         dialog.setView(customView);
 
         // 点数を取得して変数に入れておく
