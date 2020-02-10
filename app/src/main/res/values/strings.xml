@@ -59,4 +59,8 @@
     <string name="res_login_in_settings">Login</string>
     <string name="res_please_login">Do you have an account? Please Login</string>
 
+    <!-- Custom View Strings -->
+    <string name="res_rating_button">Rating</string>
+    <string name="res_favorite_button">Favorite</string>
+
 </resources>

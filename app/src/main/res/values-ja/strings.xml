@@ -59,4 +59,9 @@
     <string name="res_login_in_settings">ログイン</string>
     <string name="res_please_login">アカウントをお持ちですか？ログインしてください。</string>
 
+    <!-- Custom View Strings -->
+    <string name="res_rating_button">評価</string>
+    <string name="res_favorite_button">お気に入り</string>
+
+
 </resources>

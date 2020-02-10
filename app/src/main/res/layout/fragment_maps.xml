@@ -14,11 +14,10 @@
         map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintTop_toTopOf="parent" />
 
-    <!-- TODO: layout_height は wrap_content が理想的 -->
     <FrameLayout
         android:id="@+id/custom_view_container"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom" />
 
     <ProgressBar
@@ -27,6 +26,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center_vertical" />
+        android:gravity="center_vertical"
+        android:indeterminate="true"
+        android:indeterminateTintMode="src_in"
+        android:indeterminateTint="@color/colorAccent"/>
 
 </FrameLayout>

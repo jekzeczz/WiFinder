@@ -59,4 +59,8 @@
     <string name="res_login_in_settings">로그인</string>
     <string name="res_please_login">계정이 있으신가요? 로그인 해주세요.</string>
 
+    <!-- Custom View Strings -->
+    <string name="res_rating_button">평가</string>
+    <string name="res_favorite_button">즐겨찾기</string>
+
 </resources>

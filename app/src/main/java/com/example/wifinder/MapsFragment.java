@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.wifinder.data.SpotsAdapter;
+import com.example.wifinder.data.defineAddressIdLanguage;
 import com.example.wifinder.data.model.RatingResult;
 import com.example.wifinder.data.model.Spots;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -156,9 +157,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                 markerOptions.position(place);
                 //--------------------------------------------アイコン判断------------------------------------------
                 BitmapDescriptor icon;
-/*
+
                 if( spotsList.get(i).getSsid().equals(defineAddressIdLanguage.s1)){
-                    icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_seven1);
+                    icon = BitmapDescriptorFactory.fromResource(R.drawable.seven);
                     markerOptions.icon(icon);
                 }
                 else if(spotsList.get(i).getSsid().equals(defineAddressIdLanguage.s3)){
@@ -177,9 +178,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
                     icon = BitmapDescriptorFactory.fromResource(R.drawable.ntt);
                     markerOptions.icon(icon);
                 }
- */
-                icon = BitmapDescriptorFactory.fromResource(R.drawable.apli_2);
-                markerOptions.icon(icon);
+                else {
+                    icon = BitmapDescriptorFactory.fromResource(R.drawable.apli_2);
+                    markerOptions.icon(icon);
+                }
+
                 Marker marker = mMap.addMarker(markerOptions);
 
 

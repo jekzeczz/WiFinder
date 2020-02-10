@@ -59,4 +59,8 @@
     <string name="res_login_in_settings">登入</string>
     <string name="res_please_login">拥有账号吗？请选择登陆</string>
 
+    <!-- Custom View Strings -->
+    <string name="res_rating_button">评论</string>
+    <string name="res_favorite_button">收藏夹</string>
+
 </resources>
