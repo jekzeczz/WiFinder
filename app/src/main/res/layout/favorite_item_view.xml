@@ -27,13 +27,16 @@
         tools:text="spot address" />
 
     <!-- TODO: お気に入りアイコンに変える -->
-    <Button
+    <ImageButton
         android:id="@+id/favorite_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="削除"
+        android:padding="16dp"
+        android:src="@drawable/ic_delete_black_24dp"
+        android:background="#fafafa"
         app:layout_constraintBottom_toBottomOf="@+id/spot_address"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/spot_name" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

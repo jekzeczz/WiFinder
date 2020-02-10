@@ -3,7 +3,7 @@ package com.example.wifinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -66,7 +66,7 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
         View containerView;
         TextView spotNameView;
         TextView spotAddressView;
-        Button favoriteButton;
+        ImageButton favoriteButton;
         Favorite favorite;
 
         ViewHolder(View view) {
