@@ -63,5 +63,7 @@
     <string name="res_rating_button">評価</string>
     <string name="res_favorite_button">お気に入り</string>
 
-
+    <!-- Favorite Fragment Strings -->
+    <string name="res_cannot_use">ログインしないと\n利用できません。</string>
+    <string name="res_lets_add">お気に入りがありません\n追加してみましょう</string>
 </resources>

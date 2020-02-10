@@ -63,4 +63,7 @@
     <string name="res_rating_button">Rating</string>
     <string name="res_favorite_button">Favorite</string>
 
+    <!-- Favorite Fragment Strings -->
+    <string name="res_cannot_use">You cannot use it\nunless you log in.</string>
+    <string name="res_lets_add">No favorites.\nLet\'s add</string>
 </resources>

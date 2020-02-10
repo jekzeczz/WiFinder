@@ -63,4 +63,7 @@
     <string name="res_rating_button">평가</string>
     <string name="res_favorite_button">즐겨찾기</string>
 
+    <!-- Favorite Fragment Strings -->
+    <string name="res_cannot_use">로그인하지 않으면\n사용할 수 없습니다.</string>
+    <string name="res_lets_add">즐겨찾기가 없습니다.\n추가해봅시다.</string>
 </resources>

@@ -63,4 +63,7 @@
     <string name="res_rating_button">评论</string>
     <string name="res_favorite_button">收藏夹</string>
 
+    <!-- Favorite Fragment Strings -->
+    <string name="res_cannot_use">除非登录，\n否则无法使用。</string>
+    <string name="res_lets_add">没有收藏夹。\n让我们添加</string>
 </resources>
